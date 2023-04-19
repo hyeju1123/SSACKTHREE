@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -50,4 +52,7 @@ public class StoreEntity {
 
     @OneToOne(mappedBy = "storeEntity")
     private StoreLocationEntity storeLocationEntity;
+
+    @OneToMany(mappedBy = "storeEntity")
+    private List<MenuEntity> menuEntityList = new ArrayList<>();
 }
