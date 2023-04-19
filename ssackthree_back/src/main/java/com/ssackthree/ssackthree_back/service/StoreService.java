@@ -134,7 +134,23 @@ public class StoreService {
             storeLocationRepository.save(storeLocationEntity);
         }
     }
-    public void updateStore(StoreRegisterRequestDto storeRegisterRequestDto, MultipartFile profile, MultipartFile menu){
+
+    public void updateLocation(StoreEntity storeEntity, String address) throws Exception{
+        LatLng location = getLocation(address);
+        if(location != null){
+            Optional<StoreLocationEntity> storeLocationEntity = storeLocationRepository.findByStoreEntityId(storeEntity.getId());
+            double latitude = location.lat;
+            double longitude = location.lng;
+            StoreLocationEntity savedStoreLocationEntity = StoreLocationEntity.builder()
+                    .id(storeLocationEntity.get().getId())
+                    .latitude(latitude)
+                    .longitude(longitude)
+                    .storeEntity(storeEntity)
+                    .build();
+            storeLocationRepository.save(savedStoreLocationEntity);
+        }
+    }
+    public void updateStore(StoreRegisterRequestDto storeRegisterRequestDto, MultipartFile profile, MultipartFile menu) throws Exception{
         long userId = storeRegisterRequestDto.getUserId();
         Optional<UserEntity> user = userRepository.findById(userId);
         StoreEntity storeEntity = StoreEntity.builder()
@@ -151,6 +167,7 @@ public class StoreService {
                 .userEntity(user.get())
                 .build();
         storeRepository.save(storeEntity);
+        updateLocation(storeEntity, storeEntity.getMainAddress());
 
         if(profile != null){
             String profileOriginName = profile.getOriginalFilename();
