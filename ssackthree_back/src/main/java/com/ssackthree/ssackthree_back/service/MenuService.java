@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -34,6 +35,7 @@ public class MenuService {
                 .status(menuStatus)
                 .endTime(menuRegisterRequestDto.getEndTime())
                 .storeEntity(storeEntity.get())
+                .createdDate(LocalDateTime.now())
                 .build();
         menuRepository.save(menuEntity);
     }
@@ -56,4 +58,5 @@ public class MenuService {
                 return MenuStatusEnum.ORDER_ING;
         }
     }
+
 }
