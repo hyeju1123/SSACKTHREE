@@ -20,6 +20,8 @@ public class StoreEntity {
     @Column(name = "store_id")
     private long id;
 
+    private String storeName;
+
     private String mainAddress;
 
     private String detailAddress;

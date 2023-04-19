@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StoreRegisterResponseDto {
     private long id;
+    private String storeName;
     private String mainAddress;
     private String detailAddress;
     private String zipcode;

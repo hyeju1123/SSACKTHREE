@@ -3,8 +3,10 @@ package com.ssackthree.ssackthree_back.service;
 import com.ssackthree.ssackthree_back.dto.CustomerNicknameRequestDto;
 import com.ssackthree.ssackthree_back.dto.JoinRequestDto;
 import com.ssackthree.ssackthree_back.entity.CustomerProfileFileEntity;
+import com.ssackthree.ssackthree_back.entity.StoreEntity;
 import com.ssackthree.ssackthree_back.entity.UserEntity;
 import com.ssackthree.ssackthree_back.enums.RoleEnum;
+import com.ssackthree.ssackthree_back.repository.StoreRepository;
 import com.ssackthree.ssackthree_back.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,12 +28,13 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StoreRepository storeRepository;
 
     @Value("${upload-path}")
     private String uploadPath;
 
     public void join(JoinRequestDto joinRequestDto) throws Exception{
-        RoleEnum role = joinRequestDto.getRole().equals("customer") ? RoleEnum.ROLE_CUSTOMER : RoleEnum.ROLE_MANAGER;
+        RoleEnum role = joinRequestDto.getRole().equals("customer") ? RoleEnum.ROLE_CUSTOMER : RoleEnum.ROLE_STORE;
 
         UserEntity userEntity = UserEntity.builder()
                 .username(joinRequestDto.getUsername())
@@ -41,6 +44,14 @@ public class UserService {
                 .build();
 
         userRepository.save(userEntity);
+
+        if(role.equals(RoleEnum.ROLE_STORE)){
+            StoreEntity storeEntity = StoreEntity.builder()
+                    .storeName(joinRequestDto.getRepName())
+                    .userEntity(userEntity)
+                    .build();
+            storeRepository.save(storeEntity);
+        }
 
     }
 
