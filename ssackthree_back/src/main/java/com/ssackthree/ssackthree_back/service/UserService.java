@@ -45,14 +45,6 @@ public class UserService {
 
         userRepository.save(userEntity);
 
-        if(role.equals(RoleEnum.ROLE_STORE)){
-            StoreEntity storeEntity = StoreEntity.builder()
-                    .storeName(joinRequestDto.getRepName())
-                    .userEntity(userEntity)
-                    .build();
-            storeRepository.save(storeEntity);
-        }
-
     }
 
 

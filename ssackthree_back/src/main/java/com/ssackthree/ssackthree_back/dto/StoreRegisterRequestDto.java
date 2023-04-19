@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class StoreRegisterRequestDto {
 
     private long id;
+    private String storeName;
     private String mainAddress;
     private String detailAddress;
     private String zipcode;

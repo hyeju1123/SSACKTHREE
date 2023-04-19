@@ -10,6 +10,7 @@ import com.ssackthree.ssackthree_back.entity.*;
 import com.ssackthree.ssackthree_back.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -51,6 +52,7 @@ public class StoreService {
         long userId = storeRegisterRequestDto.getUserId();
         Optional<UserEntity> user = userRepository.findById(userId);
         StoreEntity storeEntity = StoreEntity.builder()
+                .storeName(storeRegisterRequestDto.getStoreName())
                 .mainAddress(storeRegisterRequestDto.getMainAddress())
                 .detailAddress(storeRegisterRequestDto.getDetailAddress())
                 .zipcode(storeRegisterRequestDto.getZipcode())
@@ -132,12 +134,12 @@ public class StoreService {
             storeLocationRepository.save(storeLocationEntity);
         }
     }
-
     public void updateStore(StoreRegisterRequestDto storeRegisterRequestDto, MultipartFile profile, MultipartFile menu){
         long userId = storeRegisterRequestDto.getUserId();
         Optional<UserEntity> user = userRepository.findById(userId);
         StoreEntity storeEntity = StoreEntity.builder()
                 .id(storeRegisterRequestDto.getId())
+                .storeName(storeRegisterRequestDto.getStoreName())
                 .mainAddress(storeRegisterRequestDto.getMainAddress())
                 .detailAddress(storeRegisterRequestDto.getDetailAddress())
                 .zipcode(storeRegisterRequestDto.getZipcode())
@@ -269,6 +271,7 @@ public class StoreService {
             }
             StoreRegisterResponseDto storeRegisterResponseDto = StoreRegisterResponseDto.builder()
                     .id(store.get().getId())
+                    .storeName(store.get().getStoreName())
                     .mainAddress(store.get().getMainAddress())
                     .detailAddress(store.get().getDetailAddress())
                     .holiday(store.get().getHoliday())

@@ -20,9 +20,4 @@ public class UserController {
         userService.join(joinRequestDto);
     }
 
-
-//    @PostMapping(path = "setNickname")
-//    public String join(@RequestBody CustomerNicknameRequestDto customerNicknameRequestDto) throws Exception{
-//        return userService.setNickname(customerNicknameRequestDto);
-//    }
 }
