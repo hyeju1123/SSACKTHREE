@@ -13,4 +13,5 @@ public class LocationDto {
 
     private double latitude;
     private double longitude;
+    private int km;
 }

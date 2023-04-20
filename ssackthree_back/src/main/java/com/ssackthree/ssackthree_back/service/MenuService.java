@@ -31,6 +31,8 @@ public class MenuService {
     private final StoreLocationRepository storeLocationRepository;
     private final MenuLocationRepository menuLocationRepository;
 
+    public static final double EARTH_RADIUS = 6371.0088; // 지구 반지름 상수 선언
+
     public void registerMenu(MenuRegisterRequestDto menuRegisterRequestDto){
 
         MenuStatusEnum menuStatus = getMenuStatus(menuRegisterRequestDto.getStatus());
@@ -79,9 +81,26 @@ public class MenuService {
         }
     }
 
-    public void getLatestMenuList(LocationDto locationDto){
+    public List<Long> getMenuIdInDistance(LocationDto locationDto){
         List<MenuLocationEntity> menuLocationEntityList = menuLocationRepository.findAll();
+        List<Long> menuIdList = new ArrayList<>();
+        for(MenuLocationEntity menuLocation : menuLocationEntityList){
+            double distance = getDistance(locationDto.getLatitude(), locationDto.getLongitude(), menuLocation.getLatitude(), menuLocation.getLongitude());
+            if(distance <= locationDto.getKm()){
+                menuIdList.add(menuLocation.getMenuEntity().getId());
+            }
+        }
+
+        return menuIdList;
+    }
 
 
+    public double getDistance(double lat1, double lon1, double lat2, double lon2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat/2)* Math.sin(dLat/2)+ Math.cos(Math.toRadians(lat1))* Math.cos(Math.toRadians(lat2))* Math.sin(dLon/2)* Math.sin(dLon/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double d =EARTH_RADIUS* c * 1000;
+        return d;
     }
 }

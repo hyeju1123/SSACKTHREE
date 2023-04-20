@@ -1,5 +1,6 @@
 package com.ssackthree.ssackthree_back.service;
 
+import com.google.maps.model.LatLng;
 import com.ssackthree.ssackthree_back.dto.StoreRegisterResponseDto;
 import com.ssackthree.ssackthree_back.repository.StoreRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +36,9 @@ class StoreServiceTest {
     @Test
     @DisplayName("위도경도 얻기 테스트")
     public void 위도경도() throws Exception{
-        String addr = "서울특별시 용산구 청파로47길 100";
-        System.out.println(storeService.getLocation(addr).lat);
+        String addr = "서울특별시 용산구 한강대로 306";
+        LatLng location = storeService.getLocation(addr);
+        System.out.println(location.lat);
+        System.out.println(location.lng);
     }
 }

@@ -1,13 +1,11 @@
 package com.ssackthree.ssackthree_back.controller;
 
+import com.ssackthree.ssackthree_back.dto.LocationDto;
 import com.ssackthree.ssackthree_back.dto.MenuRegisterRequestDto;
 import com.ssackthree.ssackthree_back.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -21,4 +19,5 @@ public class MenuController {
     public void registerMenu(@RequestPart(value="dto") MenuRegisterRequestDto menuRegisterRequestDto){
         menuService.registerMenu(menuRegisterRequestDto);
     }
+
 }
