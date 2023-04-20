@@ -40,6 +40,9 @@ public class MenuEntity {
     @JoinColumn(name = "store_id")
     private StoreEntity storeEntity;
 
+    @OneToOne(mappedBy = "menuEntity")
+    private MenuLocationEntity menuLocationEntity;
+
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
