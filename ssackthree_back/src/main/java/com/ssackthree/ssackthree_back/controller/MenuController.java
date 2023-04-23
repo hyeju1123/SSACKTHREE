@@ -20,4 +20,9 @@ public class MenuController {
         menuService.registerMenu(menuRegisterRequestDto);
     }
 
+//    @GetMapping(path = "get/distance")
+//    public void getMenuListInDistance(@RequestBody LocationDto){
+//
+//    }
+
 }

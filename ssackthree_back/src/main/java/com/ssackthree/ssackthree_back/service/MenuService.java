@@ -1,6 +1,7 @@
 package com.ssackthree.ssackthree_back.service;
 
 import com.ssackthree.ssackthree_back.dto.LocationDto;
+import com.ssackthree.ssackthree_back.dto.MenuInDistanceResponseDto;
 import com.ssackthree.ssackthree_back.dto.MenuRegisterRequestDto;
 import com.ssackthree.ssackthree_back.entity.MenuEntity;
 import com.ssackthree.ssackthree_back.entity.MenuLocationEntity;
@@ -11,6 +12,7 @@ import com.ssackthree.ssackthree_back.repository.MenuLocationRepository;
 import com.ssackthree.ssackthree_back.repository.MenuRepository;
 import com.ssackthree.ssackthree_back.repository.StoreLocationRepository;
 import com.ssackthree.ssackthree_back.repository.StoreRepository;
+import com.ssackthree.ssackthree_back.service.customizedClass.MenuIdDistance;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -81,17 +83,23 @@ public class MenuService {
         }
     }
 
-    public List<Long> getMenuIdInDistance(LocationDto locationDto){
+//    public List<MenuInDistanceResponseDto> getMenuListInDistance(LocationDto locationDto){
+//        List<MenuIdDistance> idDistanceList = getMenuIdInDistance(locationDto);
+//
+//
+//    }
+
+    public List<MenuIdDistance> getMenuIdInDistance(LocationDto locationDto){
         List<MenuLocationEntity> menuLocationEntityList = menuLocationRepository.findAll();
-        List<Long> menuIdList = new ArrayList<>();
+        List<MenuIdDistance> menuIdDistanceList = new ArrayList<>();
         for(MenuLocationEntity menuLocation : menuLocationEntityList){
             double distance = getDistance(locationDto.getLatitude(), locationDto.getLongitude(), menuLocation.getLatitude(), menuLocation.getLongitude());
             if(distance <= locationDto.getKm()){
-                menuIdList.add(menuLocation.getMenuEntity().getId());
+                menuIdDistanceList.add(new MenuIdDistance(menuLocation.getMenuEntity().getId(), distance));
             }
         }
 
-        return menuIdList;
+        return menuIdDistanceList;
     }
 
 
@@ -104,3 +112,5 @@ public class MenuService {
         return d;
     }
 }
+
+

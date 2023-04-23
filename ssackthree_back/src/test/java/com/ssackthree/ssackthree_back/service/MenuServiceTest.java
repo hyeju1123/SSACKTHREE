@@ -1,6 +1,7 @@
 package com.ssackthree.ssackthree_back.service;
 
 import com.ssackthree.ssackthree_back.dto.LocationDto;
+import com.ssackthree.ssackthree_back.service.customizedClass.MenuIdDistance;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,23 +41,26 @@ class MenuServiceTest {
     public void 반경() throws Exception{
         // given
         LocationDto locationDto = new LocationDto();
-//        locationDto.setLongitude(126.9723012);
-//        locationDto.setLatitude(37.5454821);
-        locationDto.setLongitude(127.0208851);
-        locationDto.setLatitude(37.25044159999999);
+        locationDto.setLongitude(126.9723012);
+        locationDto.setLatitude(37.5454821);
+//        locationDto.setLongitude(127.0208851);
+//        locationDto.setLatitude(37.25044159999999);
         locationDto.setKm(1000);
 
 
         //when
-        List<Long> idList = menuService.getMenuIdInDistance(locationDto);
+        List<MenuIdDistance> idDistanceList = menuService.getMenuIdInDistance(locationDto);
 
         //then
         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        if(idList.isEmpty()){
+        if(idDistanceList.isEmpty()){
             System.out.println("비어있음");
         }else{
-            for(long id : idList){
-                System.out.println(id);
+            for(MenuIdDistance id : idDistanceList){
+                System.out.println("id");
+                System.out.println(id.getId());
+                System.out.println("거리");
+                System.out.println(id.getDistance());
             }
         }
 
