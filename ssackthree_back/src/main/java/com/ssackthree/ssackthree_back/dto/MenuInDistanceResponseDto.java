@@ -13,6 +13,7 @@ public class MenuInDistanceResponseDto {
     private String name;
     private int originalPrice;
     private int discountedPrice;
-    private int distance;
+    private double distance;
+    private String storeName;
 
 }

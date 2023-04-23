@@ -1,6 +1,7 @@
 package com.ssackthree.ssackthree_back.service;
 
 import com.ssackthree.ssackthree_back.dto.LocationDto;
+import com.ssackthree.ssackthree_back.dto.MenuInDistanceResponseDto;
 import com.ssackthree.ssackthree_back.service.customizedClass.MenuIdDistance;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,16 +41,19 @@ class MenuServiceTest {
     @DisplayName("반경 n미터 메뉴 아이디 구하기")
     public void 반경() throws Exception{
         // given
-        LocationDto locationDto = new LocationDto();
-        locationDto.setLongitude(126.9723012);
-        locationDto.setLatitude(37.5454821);
+        LocationDto locationDto = LocationDto.builder()
+                .latitude(37.5454821)
+                .longitude(126.9723012)
+                .km(1000)
+                .build();
+
 //        locationDto.setLongitude(127.0208851);
 //        locationDto.setLatitude(37.25044159999999);
-        locationDto.setKm(1000);
+
 
 
         //when
-        List<MenuIdDistance> idDistanceList = menuService.getMenuIdInDistance(locationDto);
+        List<MenuIdDistance> idDistanceList = menuService.getMenuIdDistance(locationDto);
 
         //then
         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
@@ -64,5 +68,30 @@ class MenuServiceTest {
             }
         }
 
+    }
+
+    @Test
+    @DisplayName("반경 n미터 메뉴 리스트")
+    public void 홈페이지메뉴() throws Exception{
+        //given
+        LocationDto locationDto = LocationDto.builder()
+                .latitude(37.5454821)
+                .longitude(126.9723012)
+                .km(1000)
+                .build();
+        //when
+        List<MenuInDistanceResponseDto> menuInDistanceResponseDtoList = menuService.getMenuListInDistance(locationDto);
+
+        //then
+        for(MenuInDistanceResponseDto menuInDistanceResponseDto : menuInDistanceResponseDtoList){
+            System.out.println("이름: " + menuInDistanceResponseDto.getName());
+            System.out.println("가게이름: " + menuInDistanceResponseDto.getStoreName());
+            System.out.println("원래 가격: " + menuInDistanceResponseDto.getOriginalPrice());
+            System.out.println("할인 가격: " + menuInDistanceResponseDto.getDiscountedPrice());
+            System.out.println("거리: " + menuInDistanceResponseDto.getDistance());
+            System.out.println("아이디 : " + menuInDistanceResponseDto.getMenuId());
+
+
+        }
     }
 }

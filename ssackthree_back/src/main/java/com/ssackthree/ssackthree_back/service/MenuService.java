@@ -83,13 +83,41 @@ public class MenuService {
         }
     }
 
-//    public List<MenuInDistanceResponseDto> getMenuListInDistance(LocationDto locationDto){
-//        List<MenuIdDistance> idDistanceList = getMenuIdInDistance(locationDto);
-//
-//
-//    }
+    public List<MenuInDistanceResponseDto> getMenuListInDistance(LocationDto locationDto){
+        List<MenuIdDistance> idDistanceList = getMenuIdDistance(locationDto);
+        List<Long> menuIdList = new ArrayList<>();
+        List<Double> menuDistanceList = new ArrayList<>();
+        List<MenuInDistanceResponseDto> menuIdDistanceResponseDtoList = new ArrayList<>();
+        int i = 0;
 
-    public List<MenuIdDistance> getMenuIdInDistance(LocationDto locationDto){
+        for(MenuIdDistance menuIdDistance : idDistanceList){
+            menuIdList.add(menuIdDistance.getId());
+            menuDistanceList.add(menuIdDistance.getDistance());
+        }
+
+        List<MenuEntity> menuEntityList = menuRepository.findAllById(menuIdList);
+
+        for(MenuEntity menuEntity : menuEntityList){
+            MenuInDistanceResponseDto menuInDistanceResponseDto = MenuInDistanceResponseDto.builder()
+                    .menuId(menuEntity.getId())
+                    .name(menuEntity.getName())
+                    .originalPrice(menuEntity.getOriginalPrice())
+                    .discountedPrice(menuEntity.getDiscountedPrice())
+                    .distance(menuDistanceList.get(i))
+                    .storeName(menuEntity.getStoreEntity().getStoreName())
+                    .build();
+
+            menuIdDistanceResponseDtoList.add(menuInDistanceResponseDto);
+
+            i++;
+
+
+        }
+
+        return menuIdDistanceResponseDtoList;
+    }
+
+    public List<MenuIdDistance> getMenuIdDistance(LocationDto locationDto){
         List<MenuLocationEntity> menuLocationEntityList = menuLocationRepository.findAll();
         List<MenuIdDistance> menuIdDistanceList = new ArrayList<>();
         for(MenuLocationEntity menuLocation : menuLocationEntityList){
