@@ -52,6 +52,9 @@ public class MenuEntity {
     @OneToOne(mappedBy = "menuEntity")
     private MenuStatusEntity menuStatusEntity;
 
+    @OneToOne(mappedBy = "menuEntity")
+    private MenuBargainningEntity menuBargainningEntity;
+
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

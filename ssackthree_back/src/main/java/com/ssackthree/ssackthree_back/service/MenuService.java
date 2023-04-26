@@ -1,6 +1,7 @@
 package com.ssackthree.ssackthree_back.service;
 
 import com.ssackthree.ssackthree_back.dto.LocationDto;
+import com.ssackthree.ssackthree_back.dto.MenuBargainningDto;
 import com.ssackthree.ssackthree_back.dto.MenuInDistanceResponseDto;
 import com.ssackthree.ssackthree_back.dto.MenuRegisterRequestDto;
 import com.ssackthree.ssackthree_back.entity.*;
@@ -34,6 +35,7 @@ public class MenuService {
     private final MenuLocationRepository menuLocationRepository;
     private final MenuFileRepository menuFileRepository;
     private final MenuStatusRepository menuStatusRepository;
+    private final MenuBargainningRepository menuBargainningRepository;
 
     public static final double EARTH_RADIUS = 6371.0088; // 지구 반지름 상수 선언
 
@@ -66,6 +68,21 @@ public class MenuService {
 
         // 메뉴 상태
         registerMenuStatus(menuRegisterRequestDto.getIsBargainning(), menuEntity);
+
+        // 흥정일 경우 흥정 세부 내용
+        if(menuRegisterRequestDto.getIsBargainning().equals("T")){
+            registerMenuBargainning(menuRegisterRequestDto.getMenuBargainningDto(), menuEntity);
+        }
+    }
+
+    public void registerMenuBargainning(MenuBargainningDto menuBargainningDto, MenuEntity menuEntity){
+        MenuBargainningEntity menuBargainningEntity = MenuBargainningEntity.builder()
+                .limitTime(menuBargainningDto.getLimitTime())
+                .minPrice(menuBargainningDto.getMinPrice())
+                .menuEntity(menuEntity)
+                .build();
+
+        menuBargainningRepository.save(menuBargainningEntity);
     }
 
     public void registerMenuStatus(String isBargainning, MenuEntity menuEntity){
