@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,8 +48,9 @@ public class StoreService {
     @Value("${google.api.key}")
     private String apiKey;
 
-    public void registerStore(StoreRegisterRequestDto storeRegisterRequestDto, MultipartFile profile, MultipartFile menu) throws Exception{
+    public void registerStore(StoreRegisterRequestDto storeRegisterRequestDto, MultipartFile profile, MultipartFile[] menus) throws Exception{
 
+        //가게 일반 내용 저장
         long userId = storeRegisterRequestDto.getUserId();
         Optional<UserEntity> user = userRepository.findById(userId);
         StoreEntity storeEntity = StoreEntity.builder()
@@ -66,6 +68,7 @@ public class StoreService {
         storeRepository.save(storeEntity);
         registerLocation(storeEntity, storeRegisterRequestDto.getMainAddress());
 
+        // 프로필 사진 저장
         if(profile != null){
             String profileOriginName = profile.getOriginalFilename();
             UUID profileUuid = UUID.randomUUID();
@@ -85,23 +88,30 @@ public class StoreService {
             }
         }
 
-        if(menu != null){
-            String menuOriginName = menu.getOriginalFilename();
-            UUID menuUuid = UUID.randomUUID();
-            String menuSavedFileName = menuUuid.toString() + "_" + menuOriginName;
-            String menuFilePath = uploadPath+menuSavedFileName;
-            StoreMenuFileEntity storeMenuFileEntity = StoreMenuFileEntity.builder()
-                    .fileOriginName(menuOriginName)
-                    .fileName(menuSavedFileName)
-                    .filePath(menuFilePath)
-                    .storeEntity(storeEntity)
-                    .build();
-            storeMenuFileRepository.save(storeMenuFileEntity);
-            try {
-                menu.transferTo(new File(menuFilePath));
-            } catch (IOException e) {
-                log.error("메뉴 사진 등록 실패");
+        // 가게 메뉴 저장
+        if(menus.length != 0){
+            ArrayList<StoreMenuFileEntity> storeMenuFileEntities = new ArrayList<>();
+
+            for(MultipartFile menu : menus){
+                String menuOriginName = menu.getOriginalFilename();
+                UUID menuUuid = UUID.randomUUID();
+                String menuSavedFileName = menuUuid.toString() + "_" + menuOriginName;
+                String menuFilePath = uploadPath+menuSavedFileName;
+                StoreMenuFileEntity storeMenuFileEntity = StoreMenuFileEntity.builder()
+                        .fileOriginName(menuOriginName)
+                        .fileName(menuSavedFileName)
+                        .filePath(menuFilePath)
+                        .storeEntity(storeEntity)
+                        .build();
+                storeMenuFileEntities.add(storeMenuFileEntity);
+                try {
+                    menu.transferTo(new File(menuFilePath));
+                } catch (IOException e) {
+                    log.error("메뉴 사진 등록 실패");
+                }
             }
+            storeMenuFileRepository.saveAll(storeMenuFileEntities);
+
         }
 
 

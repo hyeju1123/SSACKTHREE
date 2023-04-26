@@ -17,8 +17,8 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping(path = "register")
-    public void registerStore(@RequestPart(value="dto") StoreRegisterRequestDto storeRegisterRequestDto, @RequestPart(value="profile", required = false) MultipartFile profile, @RequestPart(value="menu", required = false) MultipartFile menu) throws Exception{
-        storeService.registerStore(storeRegisterRequestDto, profile, menu);
+    public void registerStore(@RequestPart(value="dto") StoreRegisterRequestDto storeRegisterRequestDto, @RequestPart(value="profile", required = false) MultipartFile profile, @RequestPart(value="menus", required = false) MultipartFile[] menus) throws Exception{
+        storeService.registerStore(storeRegisterRequestDto, profile, menus);
     }
 
     @PostMapping(path = "update")
