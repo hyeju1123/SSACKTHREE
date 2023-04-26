@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,7 +24,7 @@ public class StoreMenuFileEntity {
     private String fileOriginName;
     private String filePath;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "store_id")
     private StoreEntity storeEntity;
 }

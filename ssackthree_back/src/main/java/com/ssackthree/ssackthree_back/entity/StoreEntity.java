@@ -47,8 +47,8 @@ public class StoreEntity {
     @OneToOne(mappedBy = "storeEntity")
     private StoreProfileFileEntity storeProfileFileEntity;
 
-    @OneToOne(mappedBy = "storeEntity")
-    private StoreMenuFileEntity storeMenuFileEntity;
+    @OneToMany(mappedBy = "storeEntity")
+    private List<StoreMenuFileEntity> storeMenuFileList = new ArrayList<>();
 
     @OneToOne(mappedBy = "storeEntity")
     private StoreLocationEntity storeLocationEntity;

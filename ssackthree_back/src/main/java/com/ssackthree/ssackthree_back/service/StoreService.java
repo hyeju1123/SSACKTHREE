@@ -89,7 +89,7 @@ public class StoreService {
         }
 
         // 가게 메뉴 저장
-        if(menus.length != 0){
+        if(menus != null && menus.length != 0){
             ArrayList<StoreMenuFileEntity> storeMenuFileEntities = new ArrayList<>();
 
             for(MultipartFile menu : menus){
@@ -160,9 +160,10 @@ public class StoreService {
             storeLocationRepository.save(savedStoreLocationEntity);
         }
     }
-    public void updateStore(StoreRegisterRequestDto storeRegisterRequestDto, MultipartFile profile, MultipartFile menu) throws Exception{
+    public void updateStore(StoreRegisterRequestDto storeRegisterRequestDto, MultipartFile profile, MultipartFile[] menus) throws Exception{
         long userId = storeRegisterRequestDto.getUserId();
         Optional<UserEntity> user = userRepository.findById(userId);
+        // 가게 내용
         StoreEntity storeEntity = StoreEntity.builder()
                 .id(storeRegisterRequestDto.getId())
                 .storeName(storeRegisterRequestDto.getStoreName())
@@ -179,6 +180,7 @@ public class StoreService {
         storeRepository.save(storeEntity);
         updateLocation(storeEntity, storeEntity.getMainAddress());
 
+        //가게 프로필
         if(profile != null){
             String profileOriginName = profile.getOriginalFilename();
             UUID profileUuid = UUID.randomUUID();
@@ -216,41 +218,46 @@ public class StoreService {
             }
         }
 
-        if(menu != null){
-            String menuOriginName = menu.getOriginalFilename();
-            UUID menuUuid = UUID.randomUUID();
-            String menuSavedFileName = menuUuid.toString() + "_" + menuOriginName;
-            String menuFilePath = uploadPath+menuSavedFileName;
+        // 가게 메뉴
 
-            Optional<StoreMenuFileEntity> storeMenuFileEntity = storeMenuFileRepository.findByStoreEntityId(storeRegisterRequestDto.getId());
+        // 기존 거 삭제
+        Optional<StoreMenuFileEntity[]> storeMenuFileEntity = storeMenuFileRepository.findByStoreEntityId(storeRegisterRequestDto.getId());
+        if(storeMenuFileEntity.isPresent()){
+            String[] delFilePath = new String[storeMenuFileEntity.get().length];
+            for(int i = 0; i<delFilePath.length; i++){
+                delFilePath[i] = storeMenuFileEntity.get()[i].getFilePath();
+            }
 
-            if(storeMenuFileEntity.isPresent()){
-                String deletePath = storeMenuFileEntity.get().getFilePath();
-                deleteFile(deletePath);
+            deleteFileList(delFilePath);
+            storeMenuFileRepository.deleteByStoreEntityId(storeRegisterRequestDto.getId());
 
-                StoreMenuFileEntity savedStoreMenuFileEntity = StoreMenuFileEntity.builder()
-                        .id(storeMenuFileEntity.get().getId())
+        }
+
+        // 새로 저장
+        if(menus != null){
+            ArrayList<StoreMenuFileEntity> storeMenuFileEntities = new ArrayList<>();
+
+            for(MultipartFile menu : menus){
+                String menuOriginName = menu.getOriginalFilename();
+                UUID menuUuid = UUID.randomUUID();
+                String menuSavedFileName = menuUuid.toString() + "_" + menuOriginName;
+                String menuFilePath = uploadPath+menuSavedFileName;
+                StoreMenuFileEntity storeMenuFileEntitySaved = StoreMenuFileEntity.builder()
                         .fileOriginName(menuOriginName)
                         .fileName(menuSavedFileName)
                         .filePath(menuFilePath)
                         .storeEntity(storeEntity)
                         .build();
-                storeMenuFileRepository.save(savedStoreMenuFileEntity);
-            }else{
-                StoreMenuFileEntity savedStoreMenuFileEntity = StoreMenuFileEntity.builder()
-                        .fileOriginName(menuOriginName)
-                        .fileName(menuSavedFileName)
-                        .filePath(menuFilePath)
-                        .storeEntity(storeEntity)
-                        .build();
-                storeMenuFileRepository.save(savedStoreMenuFileEntity);
+                storeMenuFileEntities.add(storeMenuFileEntitySaved);
+                try {
+                    menu.transferTo(new File(menuFilePath));
+                } catch (IOException e) {
+                    log.error("메뉴 사진 등록 실패");
+                }
             }
+            storeMenuFileRepository.saveAll(storeMenuFileEntities);
 
-            try {
-                menu.transferTo(new File(menuFilePath));
-            } catch (IOException e) {
-                log.error("가게 메뉴 사진 업데이트 실패");
-            }
+
         }
 
     }
@@ -261,6 +268,17 @@ public class StoreService {
             delFile.delete();
         }
     }
+
+    public void deleteFileList(String[] filePathList){
+        for(String path : filePathList){
+            File delFile = new File(path);
+            if(delFile.isFile()){
+                delFile.delete();
+            }
+
+        }
+    }
+
     public ResponseEntity<Resource> getProfile(long userId){
         Optional<StoreEntity> storeEntity = storeRepository.findByUserEntityId(userId);
         if(storeEntity.isPresent()){
@@ -287,31 +305,31 @@ public class StoreService {
         return null;
     }
 
-    public StoreRegisterResponseDto getStore(long userId){
-        Optional<UserEntity> user = userRepository.findById(userId);
-        Optional<StoreEntity> store = storeRepository.findByUserEntityId(user.get().getId());
-        if(store.isPresent()){
-            Optional<StoreMenuFileEntity> storeMenuFileEntity = storeMenuFileRepository.findByStoreEntityId(store.get().getId());
-            String menuFileName = "";
-            if(storeMenuFileEntity.isPresent()){
-                menuFileName = storeMenuFileEntity.get().getFileOriginName();
-            }
-            StoreRegisterResponseDto storeRegisterResponseDto = StoreRegisterResponseDto.builder()
-                    .id(store.get().getId())
-                    .storeName(store.get().getStoreName())
-                    .mainAddress(store.get().getMainAddress())
-                    .detailAddress(store.get().getDetailAddress())
-                    .holiday(store.get().getHoliday())
-                    .startTime(store.get().getStartTime())
-                    .endTime(store.get().getEndTime())
-                    .introduce(store.get().getIntroduce())
-                    .phoneNumber(store.get().getPhoneNumber())
-                    .zipcode(store.get().getZipcode())
-                    .menuFileName(menuFileName)
-                    .build();
-            return storeRegisterResponseDto;
-        }
-        return null;
-
-    }
+//    public StoreRegisterResponseDto getStore(long userId){
+//        Optional<UserEntity> user = userRepository.findById(userId);
+//        Optional<StoreEntity> store = storeRepository.findByUserEntityId(user.get().getId());
+//        if(store.isPresent()){
+//            Optional<StoreMenuFileEntity> storeMenuFileEntity = storeMenuFileRepository.findByStoreEntityId(store.get().getId());
+//            String menuFileName = "";
+//            if(storeMenuFileEntity.isPresent()){
+//                menuFileName = storeMenuFileEntity.get().getFileOriginName();
+//            }
+//            StoreRegisterResponseDto storeRegisterResponseDto = StoreRegisterResponseDto.builder()
+//                    .id(store.get().getId())
+//                    .storeName(store.get().getStoreName())
+//                    .mainAddress(store.get().getMainAddress())
+//                    .detailAddress(store.get().getDetailAddress())
+//                    .holiday(store.get().getHoliday())
+//                    .startTime(store.get().getStartTime())
+//                    .endTime(store.get().getEndTime())
+//                    .introduce(store.get().getIntroduce())
+//                    .phoneNumber(store.get().getPhoneNumber())
+//                    .zipcode(store.get().getZipcode())
+//                    .menuFileName(menuFileName)
+//                    .build();
+//            return storeRegisterResponseDto;
+//        }
+//        return null;
+//
+//    }
 }

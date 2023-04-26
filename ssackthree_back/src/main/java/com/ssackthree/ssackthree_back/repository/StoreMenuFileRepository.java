@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface StoreMenuFileRepository extends JpaRepository<StoreMenuFileEntity, Long> {
-    Optional<StoreMenuFileEntity> findByStoreEntityId(Long id);
+    Optional<StoreMenuFileEntity[]> findByStoreEntityId(Long id);
+    void deleteByStoreEntityId(Long id);
 
 }

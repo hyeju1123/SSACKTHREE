@@ -22,14 +22,14 @@ public class StoreController {
     }
 
     @PostMapping(path = "update")
-    public void updateStore(@RequestPart(value="dto") StoreRegisterRequestDto storeRegisterRequestDto, @RequestPart(value="profile", required = false) MultipartFile profile, @RequestPart(value="menu", required = false) MultipartFile menu) throws Exception{
-        storeService.updateStore(storeRegisterRequestDto, profile, menu);
+    public void updateStore(@RequestPart(value="dto") StoreRegisterRequestDto storeRegisterRequestDto, @RequestPart(value="profile", required = false) MultipartFile profile, @RequestPart(value="menus", required = false) MultipartFile[] menus) throws Exception{
+        storeService.updateStore(storeRegisterRequestDto, profile, menus);
     }
 
-    @GetMapping(path = "get/{userId}")
-    public StoreRegisterResponseDto getStore(@PathVariable(name="userId") long userId) throws Exception{
-        return storeService.getStore(userId);
-    }
+//    @GetMapping(path = "get/{userId}")
+//    public StoreRegisterResponseDto getStore(@PathVariable(name="userId") long userId) throws Exception{
+//        return storeService.getStore(userId);
+//    }
 
     @GetMapping(path = "/profile/show/{userId}")
     public ResponseEntity<Resource> getProfile(@PathVariable(name="userId") long userId) throws Exception{
