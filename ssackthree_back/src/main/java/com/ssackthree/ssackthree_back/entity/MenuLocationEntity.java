@@ -25,6 +25,6 @@ public class MenuLocationEntity {
     private double longitude;
 
     @OneToOne
-    @JoinColumn(name = "menu_locaion_id")
+    @JoinColumn(name = "menu_id")
     private MenuEntity menuEntity;
 }

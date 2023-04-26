@@ -2,6 +2,7 @@ package com.ssackthree.ssackthree_back.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssackthree.ssackthree_back.enums.MenuStatusEnum;
+import com.ssackthree.ssackthree_back.enums.MenuTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,12 +32,12 @@ public class MenuEntity {
     private String name;
     private int originalPrice;
     private int discountedPrice;
-    private String isBargainning;
+    private String endTime;
 
     @Enumerated(EnumType.STRING)
-    private MenuStatusEnum status;
+    private MenuTypeEnum type;
 
-    private String endTime;
+    private String isBargainning;
 
     @ManyToOne
     @JoinColumn(name = "store_id")
@@ -47,6 +48,9 @@ public class MenuEntity {
 
     @OneToMany(mappedBy = "menuEntity")
     private List<MenuFileEntity> menuFileEntity = new ArrayList<>();
+
+    @OneToOne(mappedBy = "menuEntity")
+    private MenuStatusEntity menuStatusEntity;
 
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

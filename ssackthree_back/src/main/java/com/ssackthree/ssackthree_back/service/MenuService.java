@@ -5,6 +5,7 @@ import com.ssackthree.ssackthree_back.dto.MenuInDistanceResponseDto;
 import com.ssackthree.ssackthree_back.dto.MenuRegisterRequestDto;
 import com.ssackthree.ssackthree_back.entity.*;
 import com.ssackthree.ssackthree_back.enums.MenuStatusEnum;
+import com.ssackthree.ssackthree_back.enums.MenuTypeEnum;
 import com.ssackthree.ssackthree_back.repository.*;
 import com.ssackthree.ssackthree_back.service.customizedClass.MenuIdDistance;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class MenuService {
     private final StoreLocationRepository storeLocationRepository;
     private final MenuLocationRepository menuLocationRepository;
     private final MenuFileRepository menuFileRepository;
+    private final MenuStatusRepository menuStatusRepository;
 
     public static final double EARTH_RADIUS = 6371.0088; // 지구 반지름 상수 선언
 
@@ -40,7 +42,7 @@ public class MenuService {
 
     public void registerMenu(MenuRegisterRequestDto menuRegisterRequestDto, MultipartFile[] menus){
 
-        MenuStatusEnum menuStatus = getMenuStatus(menuRegisterRequestDto.getStatus());
+        MenuTypeEnum menuTypeEnum = getMenuType(menuRegisterRequestDto.getType());
 
         // 메뉴 내용
         Optional<StoreEntity> storeEntity = storeRepository.findByUserEntityId(menuRegisterRequestDto.getUserId());
@@ -49,7 +51,7 @@ public class MenuService {
                 .originalPrice(menuRegisterRequestDto.getOriginalPrice())
                 .discountedPrice(menuRegisterRequestDto.getDiscountedPrice())
                 .isBargainning(menuRegisterRequestDto.getIsBargainning())
-                .status(menuStatus)
+                .type(menuTypeEnum)
                 .endTime(menuRegisterRequestDto.getEndTime())
                 .storeEntity(storeEntity.get())
                 .createdDate(LocalDateTime.now())
@@ -61,6 +63,22 @@ public class MenuService {
 
         // 메뉴 이미지
         registerMenuImageFile(menus, menuEntity);
+
+        // 메뉴 상태
+        registerMenuStatus(menuRegisterRequestDto.getIsBargainning(), menuEntity);
+    }
+
+    public void registerMenuStatus(String isBargainning, MenuEntity menuEntity){
+        MenuStatusEnum menuStatusEnum = MenuStatusEnum.ORDER_ING;
+        if(isBargainning.equals("T")){
+            menuStatusEnum = MenuStatusEnum.BARGAIN_ING;
+        }
+        MenuStatusEntity menuStatusEntity = MenuStatusEntity.builder()
+                .menuStatus(menuStatusEnum)
+                .menuEntity(menuEntity)
+                .build();
+
+        menuStatusRepository.save(menuStatusEntity);
     }
 
     public void registerMenuImageFile(MultipartFile[] menus, MenuEntity menuEntity){
@@ -100,24 +118,37 @@ public class MenuService {
         menuLocationRepository.save(menuLocationEntity);
     }
 
-    public MenuStatusEnum getMenuStatus(String menuStatusStr){
-        switch (menuStatusStr){
-            case "orderIng":
-                return MenuStatusEnum.ORDER_ING;
-            case "orderCompleted":
-                return MenuStatusEnum.ORDER_COMPLETED;
-            case "bargainIng":
-                return MenuStatusEnum.BARGAIN_ING;
-            case "bargainCompleted":
-                return MenuStatusEnum.BARGAIN_COMPLETED;
-            case "bargainSuccess":
-                return MenuStatusEnum.BARGAIN_SUCCESS;
-            case "bargainFail":
-                return MenuStatusEnum.BARGAIN_FAIL;
+    public MenuTypeEnum getMenuType(String menuTypeStr){
+        switch (menuTypeStr){
+            case "expiration":
+                return MenuTypeEnum.EXPIRATION;
+            case "wrongOrder":
+                return MenuTypeEnum.WRONG_ORDER;
+            case "b":
+                return MenuTypeEnum.B;
             default:
-                return MenuStatusEnum.ORDER_ING;
+                return MenuTypeEnum.EXPIRATION;
         }
     }
+
+//    public MenuStatusEnum getMenuStatus(String menuStatusStr){
+//        switch (menuStatusStr){
+//            case "orderIng":
+//                return MenuStatusEnum.ORDER_ING;
+//            case "orderCompleted":
+//                return MenuStatusEnum.ORDER_COMPLETED;
+//            case "bargainIng":
+//                return MenuStatusEnum.BARGAIN_ING;
+//            case "bargainCompleted":
+//                return MenuStatusEnum.BARGAIN_COMPLETED;
+//            case "bargainSuccess":
+//                return MenuStatusEnum.BARGAIN_SUCCESS;
+//            case "bargainFail":
+//                return MenuStatusEnum.BARGAIN_FAIL;
+//            default:
+//                return MenuStatusEnum.ORDER_ING;
+//        }
+//    }
 
     public List<MenuInDistanceResponseDto> getMenuListInDistance(LocationDto locationDto){
         List<MenuIdDistance> idDistanceList = getMenuIdDistance(locationDto);

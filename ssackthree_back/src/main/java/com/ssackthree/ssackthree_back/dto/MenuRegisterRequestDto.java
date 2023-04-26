@@ -18,6 +18,6 @@ public class MenuRegisterRequestDto {
     private int originalPrice;
     private int discountedPrice;
     private String isBargainning;
-    private String status;
+    private String type;
     private String endTime;
 }
