@@ -3,25 +3,24 @@ package com.ssackthree.ssackthree_back.service;
 import com.ssackthree.ssackthree_back.dto.LocationDto;
 import com.ssackthree.ssackthree_back.dto.MenuInDistanceResponseDto;
 import com.ssackthree.ssackthree_back.dto.MenuRegisterRequestDto;
-import com.ssackthree.ssackthree_back.entity.MenuEntity;
-import com.ssackthree.ssackthree_back.entity.MenuLocationEntity;
-import com.ssackthree.ssackthree_back.entity.StoreEntity;
-import com.ssackthree.ssackthree_back.entity.StoreLocationEntity;
+import com.ssackthree.ssackthree_back.entity.*;
 import com.ssackthree.ssackthree_back.enums.MenuStatusEnum;
-import com.ssackthree.ssackthree_back.repository.MenuLocationRepository;
-import com.ssackthree.ssackthree_back.repository.MenuRepository;
-import com.ssackthree.ssackthree_back.repository.StoreLocationRepository;
-import com.ssackthree.ssackthree_back.repository.StoreRepository;
+import com.ssackthree.ssackthree_back.repository.*;
 import com.ssackthree.ssackthree_back.service.customizedClass.MenuIdDistance;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -32,13 +31,18 @@ public class MenuService {
     private final StoreRepository storeRepository;
     private final StoreLocationRepository storeLocationRepository;
     private final MenuLocationRepository menuLocationRepository;
+    private final MenuFileRepository menuFileRepository;
 
     public static final double EARTH_RADIUS = 6371.0088; // 지구 반지름 상수 선언
 
-    public void registerMenu(MenuRegisterRequestDto menuRegisterRequestDto){
+    @Value("${upload-path}")
+    private String uploadPath;
+
+    public void registerMenu(MenuRegisterRequestDto menuRegisterRequestDto, MultipartFile[] menus){
 
         MenuStatusEnum menuStatus = getMenuStatus(menuRegisterRequestDto.getStatus());
 
+        // 메뉴 내용
         Optional<StoreEntity> storeEntity = storeRepository.findByUserEntityId(menuRegisterRequestDto.getUserId());
         MenuEntity menuEntity = MenuEntity.builder()
                 .name(menuRegisterRequestDto.getMenuName())
@@ -52,7 +56,39 @@ public class MenuService {
                 .build();
         menuRepository.save(menuEntity);
 
+        // 메뉴 장소
         registerMenuLocation(storeEntity.get().getStoreLocationEntity(), menuEntity);
+
+        // 메뉴 이미지
+        registerMenuImageFile(menus, menuEntity);
+    }
+
+    public void registerMenuImageFile(MultipartFile[] menus, MenuEntity menuEntity){
+        if(menus != null){
+            ArrayList<MenuFileEntity> menuFileEntities = new ArrayList<>();
+
+            for(MultipartFile menu : menus){
+                String menuOriginName = menu.getOriginalFilename();
+                UUID menuUuid = UUID.randomUUID();
+                String menuSavedFileName = menuUuid.toString() + "_" + menuOriginName;
+                String menuFilePath = uploadPath+menuSavedFileName;
+
+                MenuFileEntity menuFileEntity = MenuFileEntity.builder()
+                        .fileOriginName(menuOriginName)
+                        .fileName(menuSavedFileName)
+                        .filePath(menuFilePath)
+                        .menuEntity(menuEntity)
+                        .build();
+                menuFileEntities.add(menuFileEntity);
+                try {
+                    menu.transferTo(new File(menuFilePath));
+                } catch (IOException e) {
+                    log.error("메뉴 사진 등록 실패");
+                }
+            }
+            menuFileRepository.saveAll(menuFileEntities);
+
+        }
     }
 
     public void registerMenuLocation(StoreLocationEntity storeLocationEntity, MenuEntity menuEntity){

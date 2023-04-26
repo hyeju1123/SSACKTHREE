@@ -12,6 +12,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,6 +44,9 @@ public class MenuEntity {
 
     @OneToOne(mappedBy = "menuEntity")
     private MenuLocationEntity menuLocationEntity;
+
+    @OneToMany(mappedBy = "menuEntity")
+    private List<MenuFileEntity> menuFileEntity = new ArrayList<>();
 
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
