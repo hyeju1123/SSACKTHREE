@@ -26,10 +26,10 @@ public class StoreController {
         storeService.updateStore(storeRegisterRequestDto, profile, menus);
     }
 
-//    @GetMapping(path = "get/{userId}")
-//    public StoreRegisterResponseDto getStore(@PathVariable(name="userId") long userId) throws Exception{
-//        return storeService.getStore(userId);
-//    }
+    @GetMapping(path = "get/{userId}")
+    public StoreRegisterResponseDto getStore(@PathVariable(name="userId") long userId) throws Exception{
+        return storeService.getStore(userId);
+    }
 
     @GetMapping(path = "/profile/show/{userId}")
     public ResponseEntity<Resource> getProfile(@PathVariable(name="userId") long userId) throws Exception{

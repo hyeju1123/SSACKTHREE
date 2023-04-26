@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -20,5 +22,5 @@ public class StoreRegisterResponseDto {
     private String endTime;
     private String holiday;
     private String introduce;
-    private String menuFileName;
+    private ArrayList<String> menuFileNameList = new ArrayList<>();
 }

@@ -305,31 +305,33 @@ public class StoreService {
         return null;
     }
 
-//    public StoreRegisterResponseDto getStore(long userId){
-//        Optional<UserEntity> user = userRepository.findById(userId);
-//        Optional<StoreEntity> store = storeRepository.findByUserEntityId(user.get().getId());
-//        if(store.isPresent()){
-//            Optional<StoreMenuFileEntity> storeMenuFileEntity = storeMenuFileRepository.findByStoreEntityId(store.get().getId());
-//            String menuFileName = "";
-//            if(storeMenuFileEntity.isPresent()){
-//                menuFileName = storeMenuFileEntity.get().getFileOriginName();
-//            }
-//            StoreRegisterResponseDto storeRegisterResponseDto = StoreRegisterResponseDto.builder()
-//                    .id(store.get().getId())
-//                    .storeName(store.get().getStoreName())
-//                    .mainAddress(store.get().getMainAddress())
-//                    .detailAddress(store.get().getDetailAddress())
-//                    .holiday(store.get().getHoliday())
-//                    .startTime(store.get().getStartTime())
-//                    .endTime(store.get().getEndTime())
-//                    .introduce(store.get().getIntroduce())
-//                    .phoneNumber(store.get().getPhoneNumber())
-//                    .zipcode(store.get().getZipcode())
-//                    .menuFileName(menuFileName)
-//                    .build();
-//            return storeRegisterResponseDto;
-//        }
-//        return null;
-//
-//    }
+    public StoreRegisterResponseDto getStore(long userId){
+        Optional<UserEntity> user = userRepository.findById(userId);
+        Optional<StoreEntity> store = storeRepository.findByUserEntityId(user.get().getId());
+        if(store.isPresent()){
+            Optional<StoreMenuFileEntity[]> storeMenuFileEntity = storeMenuFileRepository.findByStoreEntityId(store.get().getId());
+            ArrayList<String> menuFileNameList = new ArrayList<>();
+            if(storeMenuFileEntity.isPresent()){
+                for(StoreMenuFileEntity menuFile : storeMenuFileEntity.get()){
+                    menuFileNameList.add(menuFile.getFileOriginName());
+                }
+            }
+            StoreRegisterResponseDto storeRegisterResponseDto = StoreRegisterResponseDto.builder()
+                    .id(store.get().getId())
+                    .storeName(store.get().getStoreName())
+                    .mainAddress(store.get().getMainAddress())
+                    .detailAddress(store.get().getDetailAddress())
+                    .holiday(store.get().getHoliday())
+                    .startTime(store.get().getStartTime())
+                    .endTime(store.get().getEndTime())
+                    .introduce(store.get().getIntroduce())
+                    .phoneNumber(store.get().getPhoneNumber())
+                    .zipcode(store.get().getZipcode())
+                    .menuFileNameList(menuFileNameList)
+                    .build();
+            return storeRegisterResponseDto;
+        }
+        return null;
+
+    }
 }
