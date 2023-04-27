@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -21,5 +22,6 @@ public class MenuInDistanceResponseDto implements Serializable {
     private double distance;
     private String storeName;
     private String menuImagePath;
+    private LocalDateTime createdDate;
 
 }

@@ -1,9 +1,6 @@
 package com.ssackthree.ssackthree_back.service;
 
-import com.ssackthree.ssackthree_back.dto.LocationDto;
-import com.ssackthree.ssackthree_back.dto.MenuBargainningDto;
-import com.ssackthree.ssackthree_back.dto.MenuInDistanceResponseDto;
-import com.ssackthree.ssackthree_back.dto.MenuRegisterRequestDto;
+import com.ssackthree.ssackthree_back.dto.*;
 import com.ssackthree.ssackthree_back.entity.*;
 import com.ssackthree.ssackthree_back.enums.MenuStatusEnum;
 import com.ssackthree.ssackthree_back.enums.MenuTypeEnum;
@@ -27,10 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -175,8 +169,10 @@ public class MenuService {
 //        }
 //    }
 
-    public List<MenuInDistanceResponseDto> getMenuListInDistance(LocationDto locationDto){
-        List<MenuIdDistance> idDistanceList = getMenuIdDistance(locationDto);
+    public List<MenuInDistanceResponseDto> getMenuListInDistance(HomePageRequestDto homePageRequestDto){
+        // 특정 거리 안에 있는 메뉴들 id, 거리 구하기
+        List<MenuIdDistance> idDistanceList = getMenuIdDistance(homePageRequestDto);
+
         List<Long> menuIdList = new ArrayList<>();
         List<Double> menuDistanceList = new ArrayList<>();
 
@@ -188,14 +184,18 @@ public class MenuService {
             menuDistanceList.add(menuIdDistance.getDistance());
         }
 
+        // 특정 거리 안에 있는 menuEntity 리스트 구하기
         List<MenuEntity> menuEntityList = menuRepository.findAllById(menuIdList);
         List<MenuFileEntity> menuFileEntityList = new ArrayList<>();
-        for(long id : menuIdList){
+
+        // 특정 거리 안에 있는 menuEntity에 대응하는 menuFileEntity 구하기
+        // TODO: 2023-04-27 : for문 안에 sql 안 날리는 방향으로 바꾸고 싶음 
+        for(long id : menuIdList){ 
             menuFileEntityList.add(menuFileRepository.findFirstByMenuEntityId(id));
         }
 
 
-
+        // return 할 dto 리스트 생성
         for(MenuEntity menuEntity : menuEntityList){
             MenuInDistanceResponseDto menuInDistanceResponseDto = MenuInDistanceResponseDto.builder()
                     .menuId(menuEntity.getId())
@@ -205,26 +205,46 @@ public class MenuService {
                     .distance(menuDistanceList.get(i))
                     .menuImagePath(menuFileEntityList.get(i).getFilePath())
                     .storeName(menuEntity.getStoreEntity().getStoreName())
+                    .createdDate(menuEntity.getCreatedDate())
                     .build();
 
             menuIdDistanceResponseDtoList.add(menuInDistanceResponseDto);
 
             i++;
-
-
         }
+
+        // 정렬
+        menuIdDistanceResponseDtoList = sort(homePageRequestDto, menuIdDistanceResponseDtoList);
+
+
+
 
         return menuIdDistanceResponseDtoList;
     }
 
+    public List<MenuInDistanceResponseDto> sort(HomePageRequestDto homePageRequestDto, List<MenuInDistanceResponseDto> menuInDistanceResponseDto){
+        Comparator<MenuInDistanceResponseDto> createdAtComparator = Comparator.comparing(MenuInDistanceResponseDto::getCreatedDate);
+        Comparator<MenuInDistanceResponseDto> distanceComparator = Comparator.comparing(MenuInDistanceResponseDto::getDistance);
 
+        switch (homePageRequestDto.getSortType()){
+            case "latest":
+                Collections.sort(menuInDistanceResponseDto, createdAtComparator);
+                return menuInDistanceResponseDto;
+            case "shortest":
+                Collections.sort(menuInDistanceResponseDto, distanceComparator);
+                return menuInDistanceResponseDto;
+            default:
+                return menuInDistanceResponseDto;
+        }
 
-    public List<MenuIdDistance> getMenuIdDistance(LocationDto locationDto){
+    }
+
+    public List<MenuIdDistance> getMenuIdDistance(HomePageRequestDto homePageRequestDto){
         List<MenuLocationEntity> menuLocationEntityList = menuLocationRepository.findAll();
         List<MenuIdDistance> menuIdDistanceList = new ArrayList<>();
         for(MenuLocationEntity menuLocation : menuLocationEntityList){
-            double distance = getDistance(locationDto.getLatitude(), locationDto.getLongitude(), menuLocation.getLatitude(), menuLocation.getLongitude());
-            if(distance <= locationDto.getKm()){
+            double distance = getDistance(homePageRequestDto.getLatitude(), homePageRequestDto.getLongitude(), menuLocation.getLatitude(), menuLocation.getLongitude());
+            if(distance <= homePageRequestDto.getKm()){
                 menuIdDistanceList.add(new MenuIdDistance(menuLocation.getMenuEntity().getId(), distance));
             }
         }

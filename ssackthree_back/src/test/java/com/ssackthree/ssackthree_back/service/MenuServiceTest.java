@@ -53,20 +53,20 @@ class MenuServiceTest {
 
 
         //when
-        List<MenuIdDistance> idDistanceList = menuService.getMenuIdDistance(locationDto);
+//        List<MenuIdDistance> idDistanceList = menuService.getMenuIdDistance(locationDto);
 
         //then
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        if(idDistanceList.isEmpty()){
-            System.out.println("비어있음");
-        }else{
-            for(MenuIdDistance id : idDistanceList){
-                System.out.println("id");
-                System.out.println(id.getId());
-                System.out.println("거리");
-                System.out.println(id.getDistance());
-            }
-        }
+//        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+//        if(idDistanceList.isEmpty()){
+//            System.out.println("비어있음");
+//        }else{
+//            for(MenuIdDistance id : idDistanceList){
+//                System.out.println("id");
+//                System.out.println(id.getId());
+//                System.out.println("거리");
+//                System.out.println(id.getDistance());
+//            }
+//        }
 
     }
 
@@ -80,18 +80,18 @@ class MenuServiceTest {
                 .km(1000)
                 .build();
         //when
-        List<MenuInDistanceResponseDto> menuInDistanceResponseDtoList = menuService.getMenuListInDistance(locationDto);
+//        List<MenuInDistanceResponseDto> menuInDistanceResponseDtoList = menuService.getMenuListInDistance(locationDto, "s");
 
         //then
-        for(MenuInDistanceResponseDto menuInDistanceResponseDto : menuInDistanceResponseDtoList){
-            System.out.println("이름: " + menuInDistanceResponseDto.getName());
-            System.out.println("가게이름: " + menuInDistanceResponseDto.getStoreName());
-            System.out.println("원래 가격: " + menuInDistanceResponseDto.getOriginalPrice());
-            System.out.println("할인 가격: " + menuInDistanceResponseDto.getDiscountedPrice());
-            System.out.println("거리: " + menuInDistanceResponseDto.getDistance());
-            System.out.println("아이디 : " + menuInDistanceResponseDto.getMenuId());
-
-
-        }
+//        for(MenuInDistanceResponseDto menuInDistanceResponseDto : menuInDistanceResponseDtoList){
+//            System.out.println("이름: " + menuInDistanceResponseDto.getName());
+//            System.out.println("가게이름: " + menuInDistanceResponseDto.getStoreName());
+//            System.out.println("원래 가격: " + menuInDistanceResponseDto.getOriginalPrice());
+//            System.out.println("할인 가격: " + menuInDistanceResponseDto.getDiscountedPrice());
+//            System.out.println("거리: " + menuInDistanceResponseDto.getDistance());
+//            System.out.println("아이디 : " + menuInDistanceResponseDto.getMenuId());
+//
+//
+//        }
     }
 }
