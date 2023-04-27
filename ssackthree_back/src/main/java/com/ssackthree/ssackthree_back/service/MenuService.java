@@ -12,12 +12,20 @@ import com.ssackthree.ssackthree_back.service.customizedClass.MenuIdDistance;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,6 +179,7 @@ public class MenuService {
         List<MenuIdDistance> idDistanceList = getMenuIdDistance(locationDto);
         List<Long> menuIdList = new ArrayList<>();
         List<Double> menuDistanceList = new ArrayList<>();
+
         List<MenuInDistanceResponseDto> menuIdDistanceResponseDtoList = new ArrayList<>();
         int i = 0;
 
@@ -180,6 +189,12 @@ public class MenuService {
         }
 
         List<MenuEntity> menuEntityList = menuRepository.findAllById(menuIdList);
+        List<MenuFileEntity> menuFileEntityList = new ArrayList<>();
+        for(long id : menuIdList){
+            menuFileEntityList.add(menuFileRepository.findFirstByMenuEntityId(id));
+        }
+
+
 
         for(MenuEntity menuEntity : menuEntityList){
             MenuInDistanceResponseDto menuInDistanceResponseDto = MenuInDistanceResponseDto.builder()
@@ -188,6 +203,7 @@ public class MenuService {
                     .originalPrice(menuEntity.getOriginalPrice())
                     .discountedPrice(menuEntity.getDiscountedPrice())
                     .distance(menuDistanceList.get(i))
+                    .menuImagePath(menuFileEntityList.get(i).getFilePath())
                     .storeName(menuEntity.getStoreEntity().getStoreName())
                     .build();
 
@@ -200,6 +216,8 @@ public class MenuService {
 
         return menuIdDistanceResponseDtoList;
     }
+
+
 
     public List<MenuIdDistance> getMenuIdDistance(LocationDto locationDto){
         List<MenuLocationEntity> menuLocationEntityList = menuLocationRepository.findAll();

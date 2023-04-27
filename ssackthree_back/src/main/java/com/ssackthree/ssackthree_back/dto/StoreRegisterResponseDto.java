@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreRegisterResponseDto {
+public class StoreRegisterResponseDto{
     private long id;
     private String storeName;
     private String mainAddress;
