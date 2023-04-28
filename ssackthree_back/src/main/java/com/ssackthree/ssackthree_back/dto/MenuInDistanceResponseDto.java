@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuInDistanceResponseDto implements Serializable {
+public class MenuInDistanceResponseDto {
 
     private long menuId;
     private String name;

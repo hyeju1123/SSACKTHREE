@@ -139,11 +139,11 @@ public class MenuService {
 
     public MenuTypeEnum getMenuType(String menuTypeStr){
         switch (menuTypeStr){
-            case "expiration":
+            case "EXPIRATION":
                 return MenuTypeEnum.EXPIRATION;
-            case "wrongOrder":
+            case "WRONG_ORDER":
                 return MenuTypeEnum.WRONG_ORDER;
-            case "b":
+            case "B":
                 return MenuTypeEnum.B;
             default:
                 return MenuTypeEnum.EXPIRATION;
@@ -169,58 +169,62 @@ public class MenuService {
 //        }
 //    }
 
-    public List<MenuInDistanceResponseDto> getMenuListInDistance(HomePageRequestDto homePageRequestDto){
-        // 특정 거리 안에 있는 메뉴들 id, 거리 구하기
-        List<MenuIdDistance> idDistanceList = getMenuIdDistance(homePageRequestDto);
 
+    public List<MenuInDistanceResponseDto> getMenuListInDistance(HomePageRequestDto homePageRequestDto){
+
+        // 흥정 조건과 메뉴 타입 조건에 맞는 id 리스트
+        List<Long> menuIdListForBarginAndType = menuRepository.findIdsByIsBargainningAndTypeIn(homePageRequestDto.getIsBargainning(), homePageRequestDto.getTypeList());
+
+        // 위의 조건 만족하면서 거리 안에 있는 id와 거리 리스트
+        List<MenuIdDistance> idDistanceList = getMenuIdDistance(homePageRequestDto, menuIdListForBarginAndType);
         List<Long> menuIdList = new ArrayList<>();
         List<Double> menuDistanceList = new ArrayList<>();
-
-        List<MenuInDistanceResponseDto> menuIdDistanceResponseDtoList = new ArrayList<>();
-        int i = 0;
 
         for(MenuIdDistance menuIdDistance : idDistanceList){
             menuIdList.add(menuIdDistance.getId());
             menuDistanceList.add(menuIdDistance.getDistance());
         }
 
-        // 특정 거리 안에 있는 menuEntity 리스트 구하기
+        // 모든 조건에 맞는 메뉴 엔티티
         List<MenuEntity> menuEntityList = menuRepository.findAllById(menuIdList);
-        List<MenuFileEntity> menuFileEntityList = new ArrayList<>();
 
-        // 특정 거리 안에 있는 menuEntity에 대응하는 menuFileEntity 구하기
-        // TODO: 2023-04-27 : for문 안에 sql 안 날리는 방향으로 바꾸고 싶음 
-        for(long id : menuIdList){ 
+        // 모든 조건에 맞는 메뉴 파일 엔티티
+        List<MenuFileEntity> menuFileEntityList = new ArrayList<>();
+        // TODO: 2023-04-27 : for문 안에 sql 안 날리는 방향으로 바꾸고 싶음
+        for(long id : menuIdList){
             menuFileEntityList.add(menuFileRepository.findFirstByMenuEntityId(id));
         }
 
-
-        // return 할 dto 리스트 생성
+        // 반환할 dto 생성
+        int i = 0;
+        List<MenuInDistanceResponseDto> menuInDistanceResponseDtoList = new ArrayList<>();
         for(MenuEntity menuEntity : menuEntityList){
             MenuInDistanceResponseDto menuInDistanceResponseDto = MenuInDistanceResponseDto.builder()
                     .menuId(menuEntity.getId())
                     .name(menuEntity.getName())
                     .originalPrice(menuEntity.getOriginalPrice())
                     .discountedPrice(menuEntity.getDiscountedPrice())
+                    .storeName(menuEntity.getStoreEntity().getStoreName())
                     .distance(menuDistanceList.get(i))
                     .menuImagePath(menuFileEntityList.get(i).getFilePath())
-                    .storeName(menuEntity.getStoreEntity().getStoreName())
                     .createdDate(menuEntity.getCreatedDate())
                     .build();
-
-            menuIdDistanceResponseDtoList.add(menuInDistanceResponseDto);
+            menuInDistanceResponseDtoList.add(menuInDistanceResponseDto);
 
             i++;
         }
 
         // 정렬
-        menuIdDistanceResponseDtoList = sort(homePageRequestDto, menuIdDistanceResponseDtoList);
+        menuInDistanceResponseDtoList = sort(homePageRequestDto, menuInDistanceResponseDtoList);
+
+        return menuInDistanceResponseDtoList;
 
 
 
 
-        return menuIdDistanceResponseDtoList;
     }
+
+
 
     public List<MenuInDistanceResponseDto> sort(HomePageRequestDto homePageRequestDto, List<MenuInDistanceResponseDto> menuInDistanceResponseDto){
         Comparator<MenuInDistanceResponseDto> createdAtComparator = Comparator.comparing(MenuInDistanceResponseDto::getCreatedDate);
@@ -239,13 +243,15 @@ public class MenuService {
 
     }
 
-    public List<MenuIdDistance> getMenuIdDistance(HomePageRequestDto homePageRequestDto){
+    public List<MenuIdDistance> getMenuIdDistance(HomePageRequestDto homePageRequestDto, List<Long> idList){
         List<MenuLocationEntity> menuLocationEntityList = menuLocationRepository.findAll();
         List<MenuIdDistance> menuIdDistanceList = new ArrayList<>();
         for(MenuLocationEntity menuLocation : menuLocationEntityList){
-            double distance = getDistance(homePageRequestDto.getLatitude(), homePageRequestDto.getLongitude(), menuLocation.getLatitude(), menuLocation.getLongitude());
-            if(distance <= homePageRequestDto.getKm()){
-                menuIdDistanceList.add(new MenuIdDistance(menuLocation.getMenuEntity().getId(), distance));
+            if(idList.contains(menuLocation.getMenuEntity().getId())){
+                double distance = getDistance(homePageRequestDto.getLatitude(), homePageRequestDto.getLongitude(), menuLocation.getLatitude(), menuLocation.getLongitude());
+                if(distance <= homePageRequestDto.getKm()){
+                    menuIdDistanceList.add(new MenuIdDistance(menuLocation.getMenuEntity().getId(), distance));
+                }
             }
         }
 

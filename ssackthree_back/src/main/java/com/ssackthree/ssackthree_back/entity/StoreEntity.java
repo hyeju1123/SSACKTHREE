@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.ssackthree.ssackthree_back.entity.UserEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
