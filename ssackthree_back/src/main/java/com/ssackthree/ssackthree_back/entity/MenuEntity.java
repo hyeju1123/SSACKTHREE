@@ -55,8 +55,8 @@ public class MenuEntity {
     @OneToOne(mappedBy = "menuEntity")
     private MenuBargainningEntity menuBargainningEntity;
 
-    @OneToOne(mappedBy = "menuEntity")
-    private UserLikeEntity userLikeEntity;
+    @OneToMany(mappedBy = "menuEntity")
+    private List<UserLikeEntity> userLikeEntityList;
 
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

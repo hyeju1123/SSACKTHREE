@@ -22,6 +22,7 @@ public class MenuInDistanceResponseDto {
     private double distance;
     private String storeName;
     private String menuImagePath;
+    private int likeCount;
     private LocalDateTime createdDate;
 
 }

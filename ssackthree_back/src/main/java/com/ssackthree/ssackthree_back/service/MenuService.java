@@ -38,6 +38,7 @@ public class MenuService {
     private final MenuFileRepository menuFileRepository;
     private final MenuStatusRepository menuStatusRepository;
     private final MenuBargainningRepository menuBargainningRepository;
+    private final UserLikeRepository userLikeRepository;
 
     public static final double EARTH_RADIUS = 6371.0088; // 지구 반지름 상수 선언
 
@@ -188,13 +189,6 @@ public class MenuService {
         // 모든 조건에 맞는 메뉴 엔티티
         List<MenuEntity> menuEntityList = menuRepository.findAllById(menuIdList);
 
-        // 모든 조건에 맞는 메뉴 파일 엔티티
-        List<MenuFileEntity> menuFileEntityList = new ArrayList<>();
-        // TODO: 2023-04-27 : for문 안에 sql 안 날리는 방향으로 바꾸고 싶음
-        for(long id : menuIdList){
-            menuFileEntityList.add(menuFileRepository.findFirstByMenuEntityId(id));
-        }
-
         // 반환할 dto 생성
         int i = 0;
         List<MenuInDistanceResponseDto> menuInDistanceResponseDtoList = new ArrayList<>();
@@ -206,7 +200,8 @@ public class MenuService {
                     .discountedPrice(menuEntity.getDiscountedPrice())
                     .storeName(menuEntity.getStoreEntity().getStoreName())
                     .distance(menuDistanceList.get(i))
-                    .menuImagePath(menuFileEntityList.get(i).getFilePath())
+                    .menuImagePath(menuEntity.getMenuFileEntity().get(0).getFilePath())
+                    .likeCount(menuEntity.getUserLikeEntityList().size())
                     .createdDate(menuEntity.getCreatedDate())
                     .build();
             menuInDistanceResponseDtoList.add(menuInDistanceResponseDto);
@@ -229,6 +224,7 @@ public class MenuService {
     public List<MenuInDistanceResponseDto> sort(HomePageRequestDto homePageRequestDto, List<MenuInDistanceResponseDto> menuInDistanceResponseDto){
         Comparator<MenuInDistanceResponseDto> createdAtComparator = Comparator.comparing(MenuInDistanceResponseDto::getCreatedDate);
         Comparator<MenuInDistanceResponseDto> distanceComparator = Comparator.comparing(MenuInDistanceResponseDto::getDistance);
+        Comparator<MenuInDistanceResponseDto> likeComparator = Comparator.comparing(MenuInDistanceResponseDto::getLikeCount).reversed();
 
         switch (homePageRequestDto.getSortType()){
             case "latest":
@@ -236,6 +232,9 @@ public class MenuService {
                 return menuInDistanceResponseDto;
             case "shortest":
                 Collections.sort(menuInDistanceResponseDto, distanceComparator);
+                return menuInDistanceResponseDto;
+            case "like":
+                Collections.sort(menuInDistanceResponseDto, likeComparator);
                 return menuInDistanceResponseDto;
             default:
                 return menuInDistanceResponseDto;

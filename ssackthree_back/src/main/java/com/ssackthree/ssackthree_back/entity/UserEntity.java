@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,7 +37,7 @@ public class UserEntity {
     @OneToOne(mappedBy = "userEntity")
     private CustomerProfileFileEntity customerProfileFileEntity;
 
-    @OneToOne(mappedBy = "menuEntity")
-    private UserLikeEntity userLikeEntity;
+    @OneToMany(mappedBy = "menuEntity")
+    private List<UserLikeEntity> userLikeEntityList;
 
 }
