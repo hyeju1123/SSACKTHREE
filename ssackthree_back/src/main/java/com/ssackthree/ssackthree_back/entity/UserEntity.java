@@ -36,6 +36,7 @@ public class UserEntity {
     @OneToOne(mappedBy = "userEntity")
     private CustomerProfileFileEntity customerProfileFileEntity;
 
-
+    @OneToOne(mappedBy = "menuEntity")
+    private UserLikeEntity userLikeEntity;
 
 }
