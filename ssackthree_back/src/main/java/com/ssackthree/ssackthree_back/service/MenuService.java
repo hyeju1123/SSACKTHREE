@@ -9,20 +9,12 @@ import com.ssackthree.ssackthree_back.service.customizedClass.MenuIdDistance;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -218,7 +210,72 @@ public class MenuService {
 
 
     }
+    public MenuDetailDto setMenuDetailDto(MenuEntity menu){
+        return MenuDetailDto.builder()
+                .name(menu.getName())
+                .originalPrice(menu.getOriginalPrice())
+                .discountedPrice(menu.getDiscountedPrice())
+                .isBargainning(menu.getIsBargainning())
+                .bargainLimitTime(Optional.ofNullable(menu.getMenuBargainningEntity()).map(MenuBargainningEntity::getLimitTime).orElse(0))
+                .saleEndTime(menu.getEndTime())
+                .imagePath(Optional.ofNullable(menu.getMenuFileEntity().get(0)).map(MenuFileEntity::getFilePath).orElse(""))
+                .build();
+    }
 
+    public MenuOtherDto setMenuOtherDto(MenuEntity menu){
+        return MenuOtherDto.builder()
+                .name(menu.getName())
+                .originamlPrice(menu.getOriginalPrice())
+                .discountedPrice(menu.getDiscountedPrice())
+                .imagePath(Optional.ofNullable(menu.getMenuFileEntity().get(0)).map(MenuFileEntity::getFilePath).orElse(""))
+                .build();
+    }
+
+    public MenuStoreDto setMenuStoreDto(StoreEntity store){
+        return MenuStoreDto.builder()
+                .storeName(store.getStoreName())
+                .startTime(store.getStartTime())
+                .endTime(store.getEndTime())
+                .holiday(store.getHoliday())
+                .phoneNumber(store.getPhoneNumber())
+                .longitude(store.getStoreLocationEntity().getLongitude())
+                .latitude(store.getStoreLocationEntity().getLatitude())
+                .mainAddress(store.getMainAddress())
+                .detailAddress(store.getDetailAddress())
+                .storeImagePath(Optional.ofNullable(store.getStoreProfileFileEntity()).map(StoreProfileFileEntity::getFilePath).orElse(""))
+                .build();
+    }
+
+    public MenuDetailResponseDto getMenuDetail(long menuId){
+        Optional<MenuEntity> menu = menuRepository.findById(menuId);
+
+        if(menu.isPresent()){
+            // 메뉴 디테일 정보
+            MenuDetailDto menuDetailDto = setMenuDetailDto(menu.get());
+
+            // 다른 메뉴 정보
+            List<MenuOtherDto> menuOtherDtoList = new ArrayList<>();
+            for(MenuEntity m : menu.get().getStoreEntity().getMenuEntityList()){
+                if(!menu.get().equals(m)){
+                    menuOtherDtoList.add(setMenuOtherDto(m));
+                }
+            }
+
+            // 가게 정보
+            MenuStoreDto menuStoreDto = setMenuStoreDto(menu.get().getStoreEntity());
+
+            // 응답 dto 설정
+            MenuDetailResponseDto menuDetailResponseDto = MenuDetailResponseDto.builder()
+                    .menuDetail(menuDetailDto)
+                    .menuOther(menuOtherDtoList)
+                    .menuStore(menuStoreDto)
+                    .build();
+
+            return menuDetailResponseDto;
+        }
+
+        return null;
+    }
 
 
     public List<MenuInDistanceResponseDto> sort(HomePageRequestDto homePageRequestDto, List<MenuInDistanceResponseDto> menuInDistanceResponseDto){

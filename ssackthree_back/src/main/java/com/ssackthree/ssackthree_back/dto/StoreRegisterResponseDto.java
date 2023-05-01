@@ -19,8 +19,8 @@ public class StoreRegisterResponseDto{
     private String detailAddress;
     private String zipcode;
     private String phoneNumber;
-    private String startTime;
-    private String endTime;
+    private int startTime;
+    private int endTime;
     private String holiday;
     private String introduce;
     private ArrayList<String> menuFileNameList = new ArrayList<>();

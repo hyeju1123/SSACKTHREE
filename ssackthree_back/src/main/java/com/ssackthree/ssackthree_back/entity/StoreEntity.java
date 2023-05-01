@@ -33,9 +33,9 @@ public class StoreEntity {
 
     private String phoneNumber;
 
-    private String startTime;
+    private int startTime;
 
-    private String endTime;
+    private int endTime;
 
     private String holiday;
 

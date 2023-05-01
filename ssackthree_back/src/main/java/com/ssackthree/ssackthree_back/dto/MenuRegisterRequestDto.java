@@ -20,6 +20,6 @@ public class MenuRegisterRequestDto {
     private String isBargainning;
     private MenuBargainningDto menuBargainningDto;
     private String type;
-    private String endTime;
+    private int endTime;
 
 }

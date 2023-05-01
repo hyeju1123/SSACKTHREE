@@ -1,6 +1,7 @@
 package com.ssackthree.ssackthree_back.controller;
 
 import com.ssackthree.ssackthree_back.dto.HomePageRequestDto;
+import com.ssackthree.ssackthree_back.dto.MenuDetailResponseDto;
 import com.ssackthree.ssackthree_back.dto.MenuInDistanceResponseDto;
 import com.ssackthree.ssackthree_back.dto.MenuRegisterRequestDto;
 import com.ssackthree.ssackthree_back.service.MenuService;
@@ -27,6 +28,11 @@ public class MenuController {
     @GetMapping(path = "get/distance")
     public List<MenuInDistanceResponseDto> getMenuListInDistance(@RequestBody HomePageRequestDto homePageRequestDto){
         return menuService.getMenuListInDistance(homePageRequestDto);
+    }
+
+    @GetMapping(path = "get/detail/{menuId}")
+    public MenuDetailResponseDto getMenuDetail(@PathVariable(name="menuId") long menuId){
+        return menuService.getMenuDetail(menuId);
     }
 
 }
