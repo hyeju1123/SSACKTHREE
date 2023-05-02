@@ -12,7 +12,11 @@ type TextProps = {
 };
 
 export const Text = ({style, children}: TextProps) => {
-  return <ReactText style={[styles.font, style]}>{children}</ReactText>;
+  return (
+    <ReactText numberOfLines={1} style={[styles.font, style]}>
+      {children}
+    </ReactText>
+  );
 };
 
 const styles = StyleSheet.create({
