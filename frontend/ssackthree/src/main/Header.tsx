@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, StatusBar, Image, TextInput} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import AiIcon from 'react-native-vector-icons/AntDesign';
+import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Text} from '../components/text';
 
 export default function Header(): JSX.Element {
@@ -10,8 +11,8 @@ export default function Header(): JSX.Element {
       <View style={styles.headerContainer}>
         <View style={styles.headerMenuContainer}>
           <View style={styles.headerMenuLeft}>
-            <Text style={styles.optionText}>흥정없음</Text>
-            <Icon
+            <Text style={styles.locText}>숙명여자대학교</Text>
+            <AiIcon
               name="down"
               size={13}
               color={'white'}
@@ -19,15 +20,9 @@ export default function Header(): JSX.Element {
             />
           </View>
           <View style={styles.headerMenuRight}>
-            <Icon
-              name="enviroment"
-              size={22}
-              color={'white'}
-              style={{marginRight: 7}}
-            />
-            <Icon
-              name="bells"
-              size={22}
+            <McIcon
+              name="bell"
+              size={24}
               color={'white'}
               style={{marginRight: 7}}
             />
@@ -38,7 +33,7 @@ export default function Header(): JSX.Element {
           </View>
         </View>
         <View style={styles.inputContainer}>
-          <Icon
+          <AiIcon
             name="search1"
             size={20}
             color={'#94E048'}
@@ -70,7 +65,7 @@ const styles = StyleSheet.create({
     color: 'white',
     alignItems: 'center',
   },
-  optionText: {
+  locText: {
     color: 'white',
     fontSize: 15,
     fontFamily: 'Inter-SemiBold',
