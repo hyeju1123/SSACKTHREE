@@ -47,7 +47,7 @@ public class UserService {
     private String uploadPath;
 
     public void join(JoinRequestDto joinRequestDto) throws Exception{
-        RoleEnum role = joinRequestDto.getRole().equals("customer") ? RoleEnum.CUSTOMER : RoleEnum.STORE;
+        RoleEnum role = joinRequestDto.getRole().equals("customer") ? RoleEnum.ROLE_CUSTOMER : RoleEnum.ROLE_STORE;
 
         UserEntity userEntity = UserEntity.builder()
                 .username(joinRequestDto.getUsername())

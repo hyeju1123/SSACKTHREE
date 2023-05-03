@@ -37,8 +37,11 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
-                .antMatchers("/api/user/login").permitAll()
-                .antMatchers("/api/menu").hasRole("CUSTOMER")
+                .antMatchers("/api/menu/get/**").hasRole("CUSTOMER")
+                .antMatchers("/api/customer/**").hasRole("CUSTOMER")
+                .antMatchers("/api/menu/register").hasRole("STORE")
+                .antMatchers("/api/store/**").hasRole("STORE")
+                .antMatchers("/api/user/login", "/api/user/join").permitAll()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();

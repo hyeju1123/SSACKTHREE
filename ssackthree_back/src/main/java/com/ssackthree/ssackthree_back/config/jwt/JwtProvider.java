@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -62,14 +63,16 @@ public class JwtProvider {
     // 토큰 복호화
     public Authentication getAuthentication(String accessToken){
         Claims claims = parseClaims(accessToken);
+        log.info("333333333333333");
+        log.info(claims.get("role").getClass().getName());
 
-        if (claims.get("auth") == null) {
+        if (claims.get("role") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
         // 클레임에서 권한 정보 가져오기기
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("auth").toString().split(","))
+                Arrays.stream(claims.get("role").toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
@@ -79,10 +82,21 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("Authorization");
+    }
+
     // 토큰 정보를 검증하는 메서드
     public boolean validateToken(String token) {
         try {
+            // Bearer 검증
+//            if (!token.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER ")) {
+//                return false;
+//            } else {
+//                token = token.split(" ")[1].trim();
+//            }
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            log.info("11111111111111111111111111111111");
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
