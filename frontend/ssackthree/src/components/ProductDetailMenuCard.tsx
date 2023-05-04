@@ -3,12 +3,16 @@ import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {Text} from './text';
 
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {ProductPageProps} from '../product/ProductDetailPage';
 
 type Props = {
   bargain: boolean;
 };
 
-export default function ProductDetailMenuCard({bargain}: Props): JSX.Element {
+export default function ProductDetailMenuCard({
+  bargain,
+  navigation,
+}: Props & ProductPageProps): JSX.Element {
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
@@ -41,7 +45,12 @@ export default function ProductDetailMenuCard({bargain}: Props): JSX.Element {
               </View>
             )}
           </View>
-          <View style={styles.spaceBetweenBox}>
+          <View
+            style={
+              bargain
+                ? styles.spaceBetweenBox
+                : [styles.spaceBetweenBox, {paddingTop: 30}]
+            }>
             <View style={styles.priceInfoBox}>
               <View style={styles.discountingLine} />
               <Text style={styles.discountedText}>￦ 5,400</Text>
@@ -54,7 +63,9 @@ export default function ProductDetailMenuCard({bargain}: Props): JSX.Element {
           </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.buyButton}>
+      <TouchableOpacity
+        style={styles.buyButton}
+        onPress={() => navigation.navigate('Order', {bargain})}>
         <Text style={styles.buyText}>구매하러 가기</Text>
       </TouchableOpacity>
     </View>

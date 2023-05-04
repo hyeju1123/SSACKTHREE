@@ -4,11 +4,19 @@ import {Text} from '../components/text';
 import AiIcon from 'react-native-vector-icons/AntDesign';
 import ProductDetailMenuCard from '../components/ProductDetailMenuCard';
 import ProductDetailOtherMenuCard from '../components/ProductDetailOtherMenuCard';
+import {ProductPageProps} from './ProductDetailPage';
 
-export default function ProductDetailMenu(): JSX.Element {
+export default function ProductDetailMenu({
+  navigation,
+  route,
+}: ProductPageProps): JSX.Element {
   return (
     <>
-      <ProductDetailMenuCard bargain={true} />
+      <ProductDetailMenuCard
+        route={route}
+        navigation={navigation}
+        bargain={true}
+      />
       <View style={styles.showMoreBox}>
         <Text style={styles.showMoreText}>이 가게의 상품 더보기</Text>
         <View style={styles.dirRowBox}>

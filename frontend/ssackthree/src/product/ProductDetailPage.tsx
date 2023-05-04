@@ -10,9 +10,19 @@ import {
 } from 'react-native';
 import {Text} from '../components/text';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {HomeStackParamList} from '../stack/HomeStack';
 import ProductDetailMenu from './ProductDetailMenu';
 
-export default function ProductDetailPage(): JSX.Element {
+export type ProductPageProps = NativeStackScreenProps<
+  HomeStackParamList,
+  'Product'
+>;
+
+export default function ProductDetailPage({
+  navigation,
+  route,
+}: ProductPageProps): JSX.Element {
   const [storeInfoState, setstoreInfoState] = useState(0);
 
   return (
@@ -95,7 +105,7 @@ export default function ProductDetailPage(): JSX.Element {
               </TouchableOpacity>
             </View>
           </View>
-          <ProductDetailMenu />
+          <ProductDetailMenu navigation={navigation} route={route} />
         </View>
       </ScrollView>
     </View>
