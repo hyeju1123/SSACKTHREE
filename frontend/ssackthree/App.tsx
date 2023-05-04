@@ -13,6 +13,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
 import MainPage from './src/main/MainPage';
+import HomeStack from './src/stack/HomeStack';
 import NeighborPage from './src/neighbor/NeighborPage';
 import ReceiptPage from './src/receipt/ReceiptPage';
 import ChatPage from './src/chat/ChatPage';
@@ -55,7 +56,7 @@ function App(): JSX.Element {
           tabBarActiveTintColor: '#94E048',
           tabBarInactiveTintColor: 'black',
         })}>
-        <Tab.Screen name="홈" component={MainPage} />
+        <Tab.Screen name="홈" component={HomeStack} />
         <Tab.Screen name="우리동네" component={NeighborPage} />
         <Tab.Screen name="주문/흥정 내역" component={ReceiptPage} />
         <Tab.Screen name="채팅" component={ChatPage} />
