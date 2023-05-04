@@ -14,6 +14,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../stack/HomeStack';
 import ProductDetailMenu from './ProductDetailMenu';
 import StoreInfo from '../components/StoreInfo';
+import ProductDetailReview from '../components/ProductDetailReview';
 
 export type ProductPageProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -110,6 +111,7 @@ export default function ProductDetailPage({
             <ProductDetailMenu navigation={navigation} route={route} />
           )}
           {storeInfoState === 1 && <StoreInfo />}
+          {storeInfoState === 2 && <ProductDetailReview />}
         </View>
       </ScrollView>
     </View>
