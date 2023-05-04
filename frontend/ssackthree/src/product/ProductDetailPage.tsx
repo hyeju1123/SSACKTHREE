@@ -13,6 +13,7 @@ import FaIcon from 'react-native-vector-icons/FontAwesome';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../stack/HomeStack';
 import ProductDetailMenu from './ProductDetailMenu';
+import StoreInfo from '../components/StoreInfo';
 
 export type ProductPageProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -105,7 +106,10 @@ export default function ProductDetailPage({
               </TouchableOpacity>
             </View>
           </View>
-          <ProductDetailMenu navigation={navigation} route={route} />
+          {storeInfoState === 0 && (
+            <ProductDetailMenu navigation={navigation} route={route} />
+          )}
+          {storeInfoState === 1 && <StoreInfo />}
         </View>
       </ScrollView>
     </View>
