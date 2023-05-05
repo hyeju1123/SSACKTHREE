@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .antMatchers("/api/menu/register").hasRole("STORE")
                 .antMatchers("/api/store/**").hasRole("STORE")
                 .antMatchers("/api/user/login", "/api/user/join").permitAll()
+                .antMatchers("/api/payment/**").permitAll()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();

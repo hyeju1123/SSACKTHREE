@@ -40,4 +40,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "menuEntity")
     private List<UserLikeEntity> userLikeEntityList;
 
+    @OneToMany(mappedBy = "userEntity")
+    private List<OrderEntity> orderEntityList;
+
 }
