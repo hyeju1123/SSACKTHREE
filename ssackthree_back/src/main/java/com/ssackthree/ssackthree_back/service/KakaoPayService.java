@@ -3,7 +3,10 @@ package com.ssackthree.ssackthree_back.service;
 import com.ssackthree.ssackthree_back.dto.KakaoPayApproveResponseDto;
 import com.ssackthree.ssackthree_back.dto.KakaoPayReadyResponseDto;
 import com.ssackthree.ssackthree_back.dto.KakaoPayRequestDto;
+import com.ssackthree.ssackthree_back.dto.KakaoPayResultResponseDto;
+import com.ssackthree.ssackthree_back.entity.MenuEntity;
 import com.ssackthree.ssackthree_back.entity.OrderEntity;
+import com.ssackthree.ssackthree_back.entity.StoreEntity;
 import com.ssackthree.ssackthree_back.repository.MenuRepository;
 import com.ssackthree.ssackthree_back.repository.OrderRepository;
 import com.ssackthree.ssackthree_back.repository.UserRepository;
@@ -102,6 +105,7 @@ public class KakaoPayService {
         // tid를 찾아와야 함
         OrderEntity order = orderRepository.findById(Long.parseLong(orderId)).get();
 
+        // 요청 준비
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("cid", cid);
         parameters.add("tid", order.getTid());
@@ -111,16 +115,37 @@ public class KakaoPayService {
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
-        RestTemplate restTemplate = new RestTemplate();
+        // 요청 보내기기
+       RestTemplate restTemplate = new RestTemplate();
 
         KakaoPayApproveResponseDto approveResponse = restTemplate.postForObject(
                 approveUrl,
                 requestEntity,
                 KakaoPayApproveResponseDto.class);
 
+        // 주문 세부 정보 저장
+        approveResponse.setKakaoPayResultResponseDto(getKakaoPayResultResponseDto(Long.parseLong(approveResponse.getPartner_order_id())));
+
         return approveResponse;
 
     }
+
+    public KakaoPayResultResponseDto getKakaoPayResultResponseDto(long orderId){
+        Optional<OrderEntity> order = orderRepository.findById(orderId);
+        if(order.isPresent()){
+            OrderEntity orderEntity = order.get();
+            MenuEntity menuEntity = order.get().getMenuEntity();
+            StoreEntity storeEntity = orderEntity.getMenuEntity().getStoreEntity();
+            KakaoPayResultResponseDto kakaoPayResultResponseDto = KakaoPayResultResponseDto.builder()
+                    .storeName(storeEntity.getStoreName())
+                    .totalPrice(menuEntity.getDiscountedPrice())
+                    .storeAddress(storeEntity.getMainAddress()+storeEntity.getDetailAddress())
+                    .endTime(storeEntity.getEndTime())
+                    .build();
+            return kakaoPayResultResponseDto;
+        }
+        return null;
+   }
 
     // header() 셋팅
     private HttpHeaders getHeaders() {

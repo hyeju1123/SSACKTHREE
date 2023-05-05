@@ -4,6 +4,7 @@ import lombok.*;
 
 @Getter
 @Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -21,5 +22,5 @@ public class KakaoPayApproveResponseDto {
     private String created_at;
     private String approved_at;
     private String payload;
-    private KakaoPayHistoryResponseDto kakaoPayHistoryResponseDto;
+    private KakaoPayResultResponseDto kakaoPayResultResponseDto;
 }
