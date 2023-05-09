@@ -1,0 +1,56 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Check if ssackthree_back has changes
+        id: check_changes
+        run: |
+          if git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep --quiet "ssackthree_back"; then
+            echo "ssackthree_back has changes"
+            echo "::set-output name=changed::true"
+          else
+            echo "ssackthree_back has no changes"
+            echo "::set-output name=changed::false"
+          fi
+
+      - name: Build with Gradle
+        run: |
+          if [[ "${{ steps.check_changes.outputs.changed }}" == "true" ]]; then
+            cd ssackthree_back
+            ./gradlew build
+          fi
+
+      - name: Build Docker image
+        run: |
+          if [[ "${{ steps.check_changes.outputs.changed }}" == "true" ]]; then
+            cd ssackthree_back
+            docker build -t lmj174/ssackthree:1.0 .
+          fi
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          if [[ "${{ steps.check_changes.outputs.changed }}" == "true" ]]; then
+            docker push your-docker-image-name
+          fi
