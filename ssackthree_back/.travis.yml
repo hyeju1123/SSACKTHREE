@@ -5,6 +5,10 @@ jdk:
 services:
   - docker
 
+branches:
+  only:
+    - main
+
 script:
   - ./gradlew build
 
