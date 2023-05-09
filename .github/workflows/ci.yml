@@ -26,7 +26,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew # (7)
+        run: chmod +x ssackthree_back/gradlew # (7)
         shell: bash
 
       - name: Build with Gradle
