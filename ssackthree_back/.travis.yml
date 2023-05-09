@@ -9,6 +9,9 @@ branches:
   only:
     - main
 
+before_install:
+  - chmod +x gradlew
+
 script:
   - ./gradlew build
 
@@ -20,5 +23,3 @@ after_success:
   - docker build -t lmj174/ssackthree:1.0 .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push lmj174/ssackthree:1.0
-
-#
