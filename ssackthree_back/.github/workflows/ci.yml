@@ -1,48 +1,44 @@
-name: Build and Deploy
+name: deploy
 
 on:
+  release:
+    types: [push]
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - 'ssackthree_back/**' # ssackthree_back 폴더 내용이 변경되었을 때만 작동
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Set up JDK
+      - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Check if ssackthree_back has changes
-        id: check_changes
-        run: |
-          if git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep --quiet "ssackthree_back"; then
-            echo "ssackthree_back has changes"
-            echo "::set-output name=changed::true"
-          else
-            echo "ssackthree_back has no changes"
-            echo "::set-output name=changed::false"
-          fi
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
 
       - name: Build with Gradle
-        run: |
-          if [[ "${{ steps.check_changes.outputs.changed }}" == "true" ]]; then
-            cd ssackthree_back
-            ./gradlew build
-          fi
+        run: ./gradlew clean build -x test
+        shell: bash
 
       - name: Build Docker image
         run: |
-          if [[ "${{ steps.check_changes.outputs.changed }}" == "true" ]]; then
-            cd ssackthree_back
-            docker build -t lmj174/ssackthree:1.0 .
-          fi
+          cd ssackthree_back
+          docker build -t lmj174/ssackthree:1.0 .
+          cd ..
+        shell: bash
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -52,6 +48,5 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: |
-          if [[ "${{ steps.check_changes.outputs.changed }}" == "true" ]]; then
-            docker push your-docker-image-name
-          fi
+          docker push your-docker-image-name
+        shell: bash
