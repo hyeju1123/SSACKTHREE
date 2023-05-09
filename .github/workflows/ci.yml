@@ -31,7 +31,7 @@ jobs:
         shell: bash
 
       - name: Build with Gradle
-        run: ssackthree_back/gradlew clean build -x test
+        run: cd ssackthree_back && ./gradlew clean build -x test
         shell: bash
 
       - name: Build Docker image
