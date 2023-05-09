@@ -8,6 +8,10 @@ services:
 script:
   - ./gradlew build
 
+# 백엔드 폴더(ssackthree_back)에 코드가 push 되었을 때만 Travis CI 실행
+if: |
+  commit_message =~ /ssackthree_back/
+
 after_success:
   - docker build -t lmj174/ssackthree:1.0 .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
