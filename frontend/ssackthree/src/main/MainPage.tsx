@@ -13,7 +13,7 @@ export default function MainPage({
 }: MainPageProps): JSX.Element {
   return (
     <>
-      <Header />
+      <Header navigation={navigation} route={route} />
       <OptionTags />
       <LatestProducts navigation={navigation} route={route} />
     </>

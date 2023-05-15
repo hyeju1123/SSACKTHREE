@@ -9,10 +9,15 @@ import {
 type TextProps = {
   children: React.ReactNode;
   style?: StyleProp<TextStyle>;
+  oneline?: boolean;
 };
 
-export const Text = ({style, children}: TextProps) => {
-  return <ReactText style={[styles.font, style]}>{children}</ReactText>;
+export const Text = ({style, children, oneline = false}: TextProps) => {
+  return (
+    <ReactText numberOfLines={oneline ? 1 : 0} style={[styles.font, style]}>
+      {children}
+    </ReactText>
+  );
 };
 
 const styles = StyleSheet.create({

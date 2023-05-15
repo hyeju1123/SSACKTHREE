@@ -1,10 +1,18 @@
 import React from 'react';
-import {View, StyleSheet, StatusBar, Image, TextInput} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  StatusBar,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import AiIcon from 'react-native-vector-icons/AntDesign';
 import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Text} from '../components/text';
+import {MainPageProps} from './MainPage';
 
-export default function Header(): JSX.Element {
+export default function Header({navigation}: MainPageProps): JSX.Element {
   return (
     <>
       <StatusBar backgroundColor={'#94E048'} />
@@ -26,10 +34,12 @@ export default function Header(): JSX.Element {
               color={'white'}
               style={{marginRight: 7}}
             />
-            <Image
-              source={require('../../images/olaf.jpeg')}
-              style={styles.profileImage}
-            />
+            <TouchableOpacity onPress={() => navigation.navigate('MyPage')}>
+              <Image
+                source={require('../../images/olaf.jpeg')}
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.inputContainer}>

@@ -12,7 +12,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
-import MainPage from './src/main/MainPage';
 import HomeStack from './src/stack/HomeStack';
 import NeighborPage from './src/neighbor/NeighborPage';
 import ReceiptPage from './src/receipt/ReceiptPage';

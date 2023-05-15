@@ -1,21 +1,10 @@
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import {Text} from './text';
-import FaIcon from 'react-native-vector-icons/FontAwesome';
+import {handleStar} from '../service/uiHook';
 import ReviewReplyCard from './ReviewReplyCard';
 
 export default function ReviewCard(): JSX.Element {
-  const handleStar = (num: number) => {
-    const arr = Array.from({length: 5}, (_, i) => {
-      if (i < num) {
-        return <FaIcon key={i} name="star" size={10} color={'black'} />;
-      } else {
-        return <FaIcon key={i} name="star-o" size={10} color={'black'} />;
-      }
-    });
-    return arr;
-  };
-
   return (
     <>
       <View style={styles.container}>
