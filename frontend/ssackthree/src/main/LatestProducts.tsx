@@ -2,11 +2,11 @@ import React from 'react';
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {Text} from '../components/text';
 import LatestProductsCard from '../components/LatestProductCard';
-import {MainPageProps} from './MainPage';
+import {HomeAndNeighborProps} from '../stack/types';
 
 export default function LatestProducts({
   navigation,
-}: MainPageProps): JSX.Element {
+}: HomeAndNeighborProps): JSX.Element {
   return (
     <View style={styles.latestProductsContainer}>
       <Text style={styles.h1Text}>방금 올라온 상품이에요 👀</Text>
@@ -30,6 +30,7 @@ export default function LatestProducts({
 
 const styles = StyleSheet.create({
   latestProductsContainer: {
+    marginBottom: 330,
     padding: 15,
   },
   h1Text: {
@@ -39,6 +40,5 @@ const styles = StyleSheet.create({
   },
   scrollViewStyle: {
     marginTop: 10,
-    marginBottom: 160,
   },
 });

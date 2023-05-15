@@ -1,21 +1,19 @@
 import React from 'react';
+import {View} from 'react-native';
 import Header from './Header';
 import OptionTags from './OptionTags';
 import LatestProducts from './LatestProducts';
-import {HomeStackParamList} from '../stack/HomeStack';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-
-export type MainPageProps = NativeStackScreenProps<HomeStackParamList, 'Home'>;
+import {HomeAndNeighborProps} from '../stack/types';
 
 export default function MainPage({
   navigation,
   route,
-}: MainPageProps): JSX.Element {
+}: HomeAndNeighborProps): JSX.Element {
   return (
-    <>
+    <View style={{backgroundColor: 'white', minHeight: '100%'}}>
       <Header navigation={navigation} route={route} />
-      <OptionTags />
+      <OptionTags page="HOME" />
       <LatestProducts navigation={navigation} route={route} />
-    </>
+    </View>
   );
 }

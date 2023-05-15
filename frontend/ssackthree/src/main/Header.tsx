@@ -10,9 +10,11 @@ import {
 import AiIcon from 'react-native-vector-icons/AntDesign';
 import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Text} from '../components/text';
-import {MainPageProps} from './MainPage';
+import {HomeAndNeighborProps} from '../stack/types';
 
-export default function Header({navigation}: MainPageProps): JSX.Element {
+export default function Header({
+  navigation,
+}: HomeAndNeighborProps): JSX.Element {
   return (
     <>
       <StatusBar backgroundColor={'#94E048'} />

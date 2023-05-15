@@ -27,6 +27,7 @@ export default function HomeStack(): JSX.Element {
         options={{
           headerTitle: '',
           headerTransparent: true,
+          headerTintColor: 'white',
         }}
         name="Product"
         component={ProductDetailPage}

@@ -1,11 +1,19 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Text} from '../components/text';
+import Header from '../main/Header';
+import OptionTags from '../main/OptionTags';
+import {HomeAndNeighborProps} from '../stack/types';
+import SecondhandGoods from './SecondhandGoods';
 
-export default function NeighborPage(): JSX.Element {
+export default function NeighborPage({
+  navigation,
+  route,
+}: HomeAndNeighborProps): JSX.Element {
   return (
-    <View>
-      <Text>우리 마을 페이지</Text>
+    <View style={{backgroundColor: 'white', minHeight: '100%'}}>
+      <Header navigation={navigation} route={route} />
+      <OptionTags page="NEIGHBOR" />
+      <SecondhandGoods navigation={navigation} route={route} />
     </View>
   );
 }
