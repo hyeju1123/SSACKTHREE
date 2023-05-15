@@ -8,9 +8,12 @@ import {
 } from 'react-native';
 import {Text} from '../components/text';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {HomeStackParamList} from '../stack/HomeStack';
+import {MyPageStackParamList} from '../stack/MyPageStack';
 
-export type MyPageProps = NativeStackScreenProps<HomeStackParamList, 'MyPage'>;
+export type MyPageProps = NativeStackScreenProps<
+  MyPageStackParamList,
+  'MyPage'
+>;
 
 export default function MyPage({navigation}: MyPageProps): JSX.Element {
   return (

@@ -34,7 +34,8 @@ export default function Header({navigation}: MainPageProps): JSX.Element {
               color={'white'}
               style={{marginRight: 7}}
             />
-            <TouchableOpacity onPress={() => navigation.navigate('MyPage')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('MyPageStack')}>
               <Image
                 source={require('../../images/olaf.jpeg')}
                 style={styles.profileImage}
