@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {Text} from '../components/text';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {MyPageStackParamList} from '../stack/MyPageStack';
+import {MyPageStackParamList} from '../navigation/MyPageStack';
 
 export type MyPageProps = NativeStackScreenProps<
   MyPageStackParamList,

@@ -10,7 +10,7 @@ import {
 import AiIcon from 'react-native-vector-icons/AntDesign';
 import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Text} from '../components/text';
-import {HomeAndNeighborProps} from '../stack/types';
+import {HomeAndNeighborProps} from '../navigation/types';
 
 export default function Header({
   navigation,

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {Text} from '../components/text';
-import {HomeAndNeighborProps} from '../stack/types';
+import {HomeAndNeighborProps} from '../navigation/types';
 import SecondhandGoodsCard from '../components/SecondhandGoodsCard';
 import EnIcon from 'react-native-vector-icons/Entypo';
 

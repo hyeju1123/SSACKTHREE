@@ -2,7 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import Header from '../main/Header';
 import OptionTags from '../main/OptionTags';
-import {HomeAndNeighborProps} from '../stack/types';
+import {HomeAndNeighborProps} from '../navigation/types';
 import SecondhandGoods from './SecondhandGoods';
 
 export default function NeighborPage({

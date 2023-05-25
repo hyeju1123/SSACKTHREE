@@ -11,7 +11,7 @@ import {
 import {Text} from '../components/text';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {HomeStackParamList} from '../stack/HomeStack';
+import {HomeStackParamList} from '../navigation/HomeStack';
 import ProductDetailMenu from './ProductDetailMenu';
 import StoreInfo from '../components/StoreInfo';
 import ProductDetailReview from '../components/ProductDetailReview';

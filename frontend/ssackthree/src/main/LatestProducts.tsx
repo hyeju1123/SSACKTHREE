@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {Text} from '../components/text';
 import LatestProductsCard from '../components/LatestProductCard';
-import {HomeAndNeighborProps} from '../stack/types';
+import {HomeAndNeighborProps} from '../navigation/types';
 
 export default function LatestProducts({
   navigation,

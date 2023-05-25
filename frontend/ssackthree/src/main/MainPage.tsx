@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import Header from './Header';
 import OptionTags from './OptionTags';
 import LatestProducts from './LatestProducts';
-import {HomeAndNeighborProps} from '../stack/types';
+import {HomeAndNeighborProps} from '../navigation/types';
 
 export default function MainPage({
   navigation,

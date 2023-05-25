@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {Text} from '../components/text';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {HomeStackParamList} from '../stack/HomeStack';
+import {HomeStackParamList} from '../navigation/HomeStack';
 
 export type OrderPageProps = NativeStackScreenProps<
   HomeStackParamList,
