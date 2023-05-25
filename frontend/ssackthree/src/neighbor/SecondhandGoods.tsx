@@ -11,7 +11,9 @@ export default function SecondhandGoods({
   return (
     <View style={styles.latestProductsContainer}>
       <Text style={styles.h1Text}>아직 거래되지 않은 상품이에요 👀</Text>
-      <TouchableOpacity style={styles.postButton}>
+      <TouchableOpacity
+        style={styles.postButton}
+        onPress={() => navigation.navigate('PostGoods')}>
         <EnIcon name="plus" color={'white'} size={20} />
         <Text style={styles.postButtonText}>등록하기</Text>
       </TouchableOpacity>
@@ -49,6 +51,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 50,
     right: 30,
+    zIndex: 10,
     backgroundColor: '#94E048',
     paddingVertical: 5,
     paddingHorizontal: 10,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import {Text} from './text';
 
 export default function StoreInfo(): JSX.Element {
@@ -26,16 +26,10 @@ export default function StoreInfo(): JSX.Element {
       </View>
       <View style={styles.container}>
         <Text style={styles.businessInfoText}>가게위치</Text>
-        <View
-          style={{
-            borderColor: 'black',
-            borderWidth: 1,
-            width: '100%',
-            height: 150,
-            marginVertical: 10,
-          }}>
-          <Text>지도 api 위치</Text>
-        </View>
+        <Image
+          source={require('../../images/loc.png')}
+          style={styles.locImage}
+        />
         <Text style={styles.locInfoText}>
           서울특별시 용산구 청파로 47길 100
         </Text>
@@ -47,7 +41,7 @@ export default function StoreInfo(): JSX.Element {
         <Text style={styles.businessInfoText}>가게공지</Text>
         <View style={styles.notificationTextBox}>
           <Text style={styles.businessInfoDes}>
-            안녕하세요~ 눈송짜장입니다! ......
+            안녕하세요~ 파리바게뜨입니다! ......
           </Text>
           <Text style={styles.businessInfoDes}>앞으로 잘부탁드려요~~~</Text>
           <Text style={styles.businessInfoDes}>쓸 게 없네.......</Text>
@@ -83,6 +77,12 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'Inter-Regular',
     fontSize: 14,
+  },
+  locImage: {
+    marginTop: 15,
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
   },
   locInfoText: {
     color: '#434343',
