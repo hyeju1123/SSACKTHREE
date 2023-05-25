@@ -11,10 +11,12 @@ import AiIcon from 'react-native-vector-icons/AntDesign';
 import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Text} from '../components/text';
 import {HomeAndNeighborProps} from '../navigation/types';
+import useAuth from '../api/useLogin';
 
 export default function Header({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
+  const {handleLogout} = useAuth();
   return (
     <>
       <StatusBar backgroundColor={'#94E048'} />
@@ -30,12 +32,14 @@ export default function Header({
             />
           </View>
           <View style={styles.headerMenuRight}>
-            <McIcon
-              name="bell"
-              size={24}
-              color={'white'}
-              style={{marginRight: 7}}
-            />
+            <TouchableOpacity onPress={handleLogout}>
+              <McIcon
+                name="bell"
+                size={24}
+                color={'white'}
+                style={{marginRight: 7}}
+              />
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => navigation.navigate('MyPageStack')}>
               <Image

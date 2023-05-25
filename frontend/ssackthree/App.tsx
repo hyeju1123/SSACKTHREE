@@ -7,9 +7,14 @@
 
 import React from 'react';
 import Root from './src/navigation/Root';
+import SWRConfigContext from './src/context/SWRConfigContext';
 
 function App(): JSX.Element {
-  return <Root />;
+  return (
+    <SWRConfigContext>
+      <Root />
+    </SWRConfigContext>
+  );
 }
 
 export default App;
