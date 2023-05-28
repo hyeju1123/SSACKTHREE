@@ -1,38 +1,50 @@
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
-import {Text} from './text';
+import {Text} from '../text';
+import {MenuStore} from '../../model/post';
+import {formatPhoneNumber} from '../../service/calculator';
 
-export default function StoreInfo(): JSX.Element {
+type Props = {
+  menuStore: MenuStore;
+};
+
+export default function StoreInfo({menuStore}: Props): JSX.Element {
+  const {storeName, startTime, endTime, holiday, phoneNumber, detailAddress} =
+    menuStore;
   return (
     <View>
       <View style={styles.container}>
         <Text style={styles.businessInfoText}>영업정보</Text>
         <View style={styles.businessInfoTextBox}>
           <Text style={styles.businessInfoTitle}>상호명</Text>
-          <Text style={styles.businessInfoDes}>파리바게트</Text>
+          <Text style={styles.businessInfoDes}>{storeName}</Text>
         </View>
         <View style={styles.businessInfoTextBox}>
           <Text style={styles.businessInfoTitle}>영업시간</Text>
-          <Text style={styles.businessInfoDes}>09:00~18:00</Text>
+          <Text style={styles.businessInfoDes}>
+            {startTime}~{endTime}
+          </Text>
         </View>
         <View style={styles.businessInfoTextBox}>
           <Text style={styles.businessInfoTitle}>휴무일</Text>
-          <Text style={styles.businessInfoDes}>매주 월요일</Text>
+          <Text style={styles.businessInfoDes}>
+            {holiday ? holiday : '없음'}
+          </Text>
         </View>
         <View style={styles.businessInfoTextBox}>
           <Text style={styles.businessInfoTitle}>전화번호</Text>
-          <Text style={styles.businessInfoDes}>02-1234-5678</Text>
+          <Text style={styles.businessInfoDes}>
+            {formatPhoneNumber(phoneNumber)}
+          </Text>
         </View>
       </View>
       <View style={styles.container}>
         <Text style={styles.businessInfoText}>가게위치</Text>
         <Image
-          source={require('../../images/loc.png')}
+          source={require('../../../images/loc.png')}
           style={styles.locImage}
         />
-        <Text style={styles.locInfoText}>
-          서울특별시 용산구 청파로 47길 100
-        </Text>
+        <Text style={styles.locInfoText}>{detailAddress}</Text>
         <Text style={styles.locInfoText}>
           (나의 주소로부터 약 100m 거리에 있습니다.)
         </Text>

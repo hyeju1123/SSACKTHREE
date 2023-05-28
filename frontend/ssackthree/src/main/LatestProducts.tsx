@@ -11,7 +11,8 @@ export default function LatestProducts({
     <View style={styles.latestProductsContainer}>
       <Text style={styles.h1Text}>방금 올라온 상품이에요 👀</Text>
       <ScrollView style={styles.scrollViewStyle}>
-        <TouchableOpacity onPress={() => navigation.navigate('Product')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Product', {postId: 2})}>
           <LatestProductsCard />
         </TouchableOpacity>
         <LatestProductsCard />

@@ -1,27 +1,35 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {Text} from '../components/text';
+import {Text} from '../text';
 import AiIcon from 'react-native-vector-icons/AntDesign';
-import ProductDetailMenuCard from '../components/ProductDetailMenuCard';
-import ProductDetailOtherMenuCard from '../components/ProductDetailOtherMenuCard';
-import {ProductPageProps} from './ProductDetailPage';
+import ProductDetailMenuCard from './ProductDetailMenuCard';
+import ProductDetailOtherMenuCard from './ProductDetailOtherMenuCard';
+import {ProductPageProps} from '../../product/ProductDetailPage';
+import {DetailPost} from '../../model/post';
+
+type Props = {
+  post: DetailPost;
+} & ProductPageProps;
 
 export default function ProductDetailMenu({
+  post,
   navigation,
   route,
-}: ProductPageProps): JSX.Element {
+}: Props): JSX.Element {
+  const {menuOther} = post;
+
   return (
     <>
       <ProductDetailMenuCard
+        post={post}
         route={route}
         navigation={navigation}
-        bargain={true}
       />
       <View style={styles.showMoreBox}>
         <Text style={styles.showMoreText}>이 가게의 상품 더보기</Text>
         <View style={styles.dirRowBox}>
           <Text style={[styles.showMoreSmallText, {flex: 1}]}>
-            4건의 할인상품이 있습니다.
+            {menuOther.length}건의 할인상품이 있습니다.
           </Text>
           <TouchableOpacity style={styles.dirRowBox}>
             <Text style={styles.showMoreSmallText}>전체</Text>
@@ -34,8 +42,9 @@ export default function ProductDetailMenu({
           </TouchableOpacity>
         </View>
       </View>
-      <ProductDetailOtherMenuCard />
-      <ProductDetailOtherMenuCard />
+      {menuOther.map((menu, index) => (
+        <ProductDetailOtherMenuCard menu={menu} key={index} />
+      ))}
     </>
   );
 }

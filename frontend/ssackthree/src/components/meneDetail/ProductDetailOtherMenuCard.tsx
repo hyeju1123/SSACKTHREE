@@ -1,32 +1,41 @@
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
-import {Text} from './text';
-
+import {Text} from '../text';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {MenuOther} from '../../model/post';
+import {calcDiscountRate, formatPrice} from '../../service/calculator';
 
-export default function ProductDetailOtherMenuCard(): JSX.Element {
+type Props = {
+  menu: MenuOther;
+};
+
+export default function ProductDetailOtherMenuCard({menu}: Props): JSX.Element {
+  const {name, originamlPrice, discountedPrice, imagePath} = menu;
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
-        <Image
-          source={require('../../images/sandwich.jpg')}
-          style={styles.foodImage}
-        />
+        <Image source={{uri: imagePath}} style={styles.foodImage} />
         <View style={styles.infoBox}>
           <View style={styles.foodInfoContainer}>
             <View style={styles.foodTitleBox}>
-              <Text style={styles.foodTitleText}>파리바게뜨 런치 샌드위치</Text>
+              <Text style={styles.foodTitleText}>{name}</Text>
               <IonIcon name="heart-outline" size={15} color={'#FD8535'} />
             </View>
             <View style={styles.dirRowBox}>
-              <Text style={styles.discountRatioText}>10%</Text>
+              <Text style={styles.discountRatioText}>
+                {calcDiscountRate(originamlPrice, discountedPrice)}%
+              </Text>
               <View>
                 <View style={styles.discountingLine} />
-                <Text style={styles.discountedText}>￦ 5,400</Text>
+                <Text style={styles.discountedText}>
+                  ￦ {formatPrice(originamlPrice.toString())}
+                </Text>
               </View>
             </View>
             <View style={styles.priceTextBox}>
-              <Text style={styles.priceText}>￦ 3,200</Text>
+              <Text style={styles.priceText}>
+                ￦ {formatPrice(discountedPrice.toString())}
+              </Text>
             </View>
           </View>
         </View>

@@ -1,29 +1,45 @@
 import React from 'react';
 import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {Text} from './text';
+import {Text} from '../text';
 
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {ProductPageProps} from '../product/ProductDetailPage';
+import {ProductPageProps} from '../../product/ProductDetailPage';
+import {DetailPost} from '../../model/post';
+import {
+  calcDiscountRate,
+  convertTime,
+  formatPrice,
+} from '../../service/calculator';
 
 type Props = {
-  bargain: boolean;
-};
+  post: DetailPost;
+} & ProductPageProps;
 
 export default function ProductDetailMenuCard({
-  bargain,
+  post,
   navigation,
-}: Props & ProductPageProps): JSX.Element {
+}: Props): JSX.Element {
+  const {
+    menuDetail: {
+      name,
+      isBargainning,
+      bargainLimitTime,
+      saleEndTime,
+      originalPrice,
+      discountedPrice,
+      imagePath,
+    },
+  } = post;
+  const bargain = isBargainning === 'T' ? true : false;
+
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
-        <Image
-          source={require('../../images/sandwich.jpg')}
-          style={styles.foodImage}
-        />
+        <Image source={{uri: imagePath}} style={styles.foodImage} />
         <View style={styles.infoBox}>
           <View style={styles.foodInfoContainer}>
             <View style={styles.foodTitleBox}>
-              <Text style={styles.foodTitleText}>파리바게뜨 런치 샌드위치</Text>
+              <Text style={styles.foodTitleText}>{name}</Text>
               <IonIcon name="heart-outline" size={15} color={'#FD8535'} />
             </View>
             {bargain && (
@@ -40,7 +56,7 @@ export default function ProductDetailMenuCard({
                   상품입니다.
                 </Text>
                 <Text style={styles.bargainInfoText}>
-                  흥정 마감 시간 16:20 (10분간 흥정 가능)
+                  {bargainLimitTime} 분간 흥정 가능합니다
                 </Text>
               </View>
             )}
@@ -53,19 +69,29 @@ export default function ProductDetailMenuCard({
             }>
             <View style={styles.priceInfoBox}>
               <View style={styles.discountingLine} />
-              <Text style={styles.discountedText}>￦ 5,400</Text>
-              <Text style={styles.priceText}>￦ 3,200</Text>
-              <Text style={styles.endTimeText}>판매 마감 시간 18:00</Text>
+              <Text style={styles.discountedText}>
+                ￦ {formatPrice(originalPrice.toString())}
+              </Text>
+              <Text style={styles.priceText}>
+                ￦ {formatPrice(discountedPrice.toString())}
+              </Text>
+              <Text style={styles.endTimeText}>
+                판매 마감 시간 {convertTime(saleEndTime)}
+              </Text>
             </View>
             <View style={styles.discountedRatioBox}>
-              <Text style={styles.discountedRatioText}>40%</Text>
+              <Text style={styles.discountedRatioText}>
+                {calcDiscountRate(originalPrice, discountedPrice)}%
+              </Text>
             </View>
           </View>
         </View>
       </View>
       <TouchableOpacity
         style={styles.buyButton}
-        onPress={() => navigation.navigate('Order', {bargain})}>
+        onPress={() =>
+          navigation.navigate('Order', {menuDetail: post.menuDetail})
+        }>
         <Text style={styles.buyText}>구매하러 가기</Text>
       </TouchableOpacity>
     </View>
@@ -157,7 +183,7 @@ const styles = StyleSheet.create({
   endTimeText: {
     color: 'black',
     fontFamily: 'Inter-Light',
-    fontSize: 5,
+    fontSize: 7,
     paddingHorizontal: 5,
   },
   discountedRatioBox: {

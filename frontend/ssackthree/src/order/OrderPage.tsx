@@ -9,6 +9,7 @@ import {
 import {Text} from '../components/text';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../navigation/HomeStack';
+import {convertTime, formatPrice} from '../service/calculator';
 
 export type OrderPageProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -16,35 +17,44 @@ export type OrderPageProps = NativeStackScreenProps<
 >;
 
 export default function OrderPage({route}: OrderPageProps): JSX.Element {
-  const {bargain} = route.params;
+  const {menuDetail} = route.params;
+  const {
+    name,
+    isBargainning,
+    bargainLimitTime,
+    saleEndTime,
+    originalPrice,
+    imagePath,
+  } = menuDetail;
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../../images/sandwich.jpg')}
-        style={styles.backgroundImage}
-      />
+      <Image source={{uri: imagePath}} style={styles.backgroundImage} />
       <View style={styles.infoBox}>
-        <Text style={styles.foodNameText}>파리바게뜨 런치 샌드위치</Text>
-        {bargain && (
+        <Text style={styles.foodNameText}>{name}</Text>
+        {isBargainning && (
           <Text style={styles.bargainInfoText}>
-            흥정 마감 시간 16:20 (10분간 흥정 가능)
+            {bargainLimitTime} 분간 흥정 가능
           </Text>
         )}
 
-        <Text style={styles.endTimeText}>판매 마감 시간 18:00</Text>
+        <Text style={styles.endTimeText}>
+          판매 마감 시간 {convertTime(saleEndTime)}
+        </Text>
       </View>
       <View style={styles.mediumSpace}>
-        {bargain && (
+        {isBargainning && (
           <Text style={styles.highestBargainText}>현재 최고 흥정가: 5,000</Text>
         )}
       </View>
       <View style={styles.orderPriceBox}>
         <Text style={styles.orderPriceInfoText}>총 주문금액</Text>
-        <Text style={styles.orderPriceText}>9,000원</Text>
+        <Text style={styles.orderPriceText}>
+          {formatPrice(originalPrice.toString())}원
+        </Text>
       </View>
       <View style={styles.buttonBox}>
-        {bargain && (
+        {isBargainning && (
           <TouchableOpacity style={[styles.button, {backgroundColor: 'white'}]}>
             <Text style={[styles.buttonText, {color: '#94E048'}]}>
               흥정하기

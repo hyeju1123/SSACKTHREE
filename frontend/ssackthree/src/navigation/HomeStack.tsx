@@ -5,11 +5,12 @@ import MainPage from '../main/MainPage';
 import ProductDetailPage from '../product/ProductDetailPage';
 import OrderPage from '../order/OrderPage';
 import MyPageStack from './MyPageStack';
+import {MenuDetail} from '../model/post';
 
 export type HomeStackParamList = {
   Home: undefined;
-  Product: undefined;
-  Order: {bargain: boolean};
+  Product: {postId: number};
+  Order: {menuDetail: MenuDetail};
   MyPageStack: undefined;
 };
 
