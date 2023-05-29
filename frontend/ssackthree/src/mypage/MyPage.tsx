@@ -6,6 +6,7 @@ import {MyPageStackParamList} from '../navigation/MyPageStack';
 import {useRecoilValue} from 'recoil';
 import {meData} from '../service/atom';
 import Avatar from '../components/Avatar';
+import useAuth from '../api/useLogin';
 
 export type MyPageProps = NativeStackScreenProps<
   MyPageStackParamList,
@@ -14,6 +15,8 @@ export type MyPageProps = NativeStackScreenProps<
 
 export default function MyPage({navigation}: MyPageProps): JSX.Element {
   const {sub} = useRecoilValue(meData);
+  const {handleLogout} = useAuth();
+
   return (
     <>
       <StatusBar backgroundColor={'#fff'} />
@@ -21,6 +24,9 @@ export default function MyPage({navigation}: MyPageProps): JSX.Element {
         <View style={styles.profileBar}>
           <Avatar />
           <Text style={styles.profileText}>{sub}</Text>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Text style={styles.logoutText}>로그아웃</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.serviceContainer}>
           <Text style={styles.serviceText}>재고떨이쇼핑몰</Text>
@@ -76,6 +82,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     marginLeft: 20,
+  },
+  logoutButton: {
+    position: 'absolute',
+    right: 20,
+  },
+  logoutText: {
+    fontFamily: 'Inter-Bold',
   },
   serviceContainer: {
     paddingHorizontal: 20,
