@@ -15,7 +15,6 @@ import Avatar from '../components/Avatar';
 export default function Header({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
-  console.log('header');
   return (
     <>
       <StatusBar backgroundColor={'#94E048'} />

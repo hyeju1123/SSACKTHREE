@@ -20,7 +20,6 @@ async function login(setProfile: SetterOrUpdater<AuthUser>): Promise<AuthUser> {
   const {data: imageURL} = await customAxios().then(
     res => res && res.get(`/api/customer/profile/show/${parsedData.userId}`),
   );
-  console.log('imageURL in login', imageURL);
 
   setProfile({...parsedData, imageURL});
 
