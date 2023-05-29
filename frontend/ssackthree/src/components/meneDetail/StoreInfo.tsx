@@ -1,16 +1,25 @@
 import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {Text} from '../text';
 import {MenuStore} from '../../model/post';
 import {formatPhoneNumber} from '../../service/calculator';
+import MapViewWrapper from '../MapViewWrapper';
 
 type Props = {
   menuStore: MenuStore;
 };
 
 export default function StoreInfo({menuStore}: Props): JSX.Element {
-  const {storeName, startTime, endTime, holiday, phoneNumber, detailAddress} =
-    menuStore;
+  const {
+    storeName,
+    startTime,
+    endTime,
+    holiday,
+    phoneNumber,
+    detailAddress,
+    latitude,
+    longitude,
+  } = menuStore;
   return (
     <View>
       <View style={styles.container}>
@@ -40,10 +49,9 @@ export default function StoreInfo({menuStore}: Props): JSX.Element {
       </View>
       <View style={styles.container}>
         <Text style={styles.businessInfoText}>가게위치</Text>
-        <Image
-          source={require('../../../images/loc.png')}
-          style={styles.locImage}
-        />
+        <View style={styles.mapViewWrapper}>
+          <MapViewWrapper latitude={latitude} longitude={longitude} />
+        </View>
         <Text style={styles.locInfoText}>{detailAddress}</Text>
         <Text style={styles.locInfoText}>
           (나의 주소로부터 약 100m 거리에 있습니다.)
@@ -90,11 +98,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Regular',
     fontSize: 14,
   },
-  locImage: {
-    marginTop: 15,
+  mapViewWrapper: {
     width: '100%',
     height: 200,
-    borderRadius: 10,
+    marginVertical: 10,
   },
   locInfoText: {
     color: '#434343',
