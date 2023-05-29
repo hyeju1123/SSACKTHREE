@@ -6,12 +6,14 @@ import ProductDetailPage from '../product/ProductDetailPage';
 import OrderPage from '../order/OrderPage';
 import MyPageStack from './MyPageStack';
 import {MenuDetail} from '../model/post';
+import PostCodeStack from './PostCodeStack';
 
 export type HomeStackParamList = {
   Home: undefined;
   Product: {postId: number};
   Order: {menuDetail: MenuDetail};
   MyPageStack: undefined;
+  PostCodeStack: undefined;
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -45,6 +47,11 @@ export default function HomeStack(): JSX.Element {
         options={{headerShown: false}}
         name="MyPageStack"
         component={MyPageStack}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PostCodeStack"
+        component={PostCodeStack}
       />
     </Stack.Navigator>
   );

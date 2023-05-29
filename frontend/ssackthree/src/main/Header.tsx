@@ -15,13 +15,17 @@ import Avatar from '../components/Avatar';
 export default function Header({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
+  console.log('header');
   return (
     <>
       <StatusBar backgroundColor={'#94E048'} />
       <View style={styles.headerContainer}>
         <View style={styles.headerMenuContainer}>
           <View style={styles.headerMenuLeft}>
-            <Text style={styles.locText}>숙명여자대학교</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('PostCodeStack')}>
+              <Text style={styles.locText}>숙명여자대학교</Text>
+            </TouchableOpacity>
             <AiIcon
               name="down"
               size={13}
