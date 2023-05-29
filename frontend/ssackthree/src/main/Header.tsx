@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   StatusBar,
-  Image,
   TextInput,
   TouchableOpacity,
 } from 'react-native';
@@ -12,11 +11,13 @@ import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Text} from '../components/text';
 import {HomeAndNeighborProps} from '../navigation/types';
 import useAuth from '../api/useLogin';
+import Avatar from '../components/Avatar';
 
 export default function Header({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
   const {handleLogout} = useAuth();
+
   return (
     <>
       <StatusBar backgroundColor={'#94E048'} />
@@ -42,10 +43,7 @@ export default function Header({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => navigation.navigate('MyPageStack')}>
-              <Image
-                source={require('../../images/olaf.jpeg')}
-                style={styles.profileImage}
-              />
+              <Avatar />
             </TouchableOpacity>
           </View>
         </View>
@@ -91,11 +89,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  profileImage: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
   },
   inputContainer: {
     height: 40,

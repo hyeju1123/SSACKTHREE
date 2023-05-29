@@ -1,14 +1,11 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  StatusBar,
-} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, StatusBar} from 'react-native';
 import {Text} from '../components/text';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MyPageStackParamList} from '../navigation/MyPageStack';
+import {useRecoilValue} from 'recoil';
+import {meData} from '../service/atom';
+import Avatar from '../components/Avatar';
 
 export type MyPageProps = NativeStackScreenProps<
   MyPageStackParamList,
@@ -16,16 +13,14 @@ export type MyPageProps = NativeStackScreenProps<
 >;
 
 export default function MyPage({navigation}: MyPageProps): JSX.Element {
+  const {sub} = useRecoilValue(meData);
   return (
     <>
       <StatusBar backgroundColor={'#fff'} />
       <View style={styles.container}>
         <View style={styles.profileBar}>
-          <Image
-            source={require('../../images/olaf.jpeg')}
-            style={styles.profileImage}
-          />
-          <Text style={styles.profileText}>올라프</Text>
+          <Avatar />
+          <Text style={styles.profileText}>{sub}</Text>
         </View>
         <View style={styles.serviceContainer}>
           <Text style={styles.serviceText}>재고떨이쇼핑몰</Text>
@@ -74,17 +69,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#d9d9d9',
     borderBottomWidth: 1.5,
-  },
-  profileImage: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    margin: 20,
+    padding: 20,
   },
   profileText: {
     fontFamily: 'Inter-SemiBold',
     fontSize: 16,
     color: 'black',
+    marginLeft: 20,
   },
   serviceContainer: {
     paddingHorizontal: 20,

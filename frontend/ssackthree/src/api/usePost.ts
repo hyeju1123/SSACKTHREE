@@ -8,6 +8,5 @@ export default function usePost(id: number) {
     isLoading,
   } = useSWR<DetailPost>(`/api/menu/get/detail/${id}`);
 
-  console.log('data::', postData);
   return {postData, error, isLoading};
 }

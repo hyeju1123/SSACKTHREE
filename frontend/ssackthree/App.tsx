@@ -8,11 +8,14 @@
 import React from 'react';
 import Root from './src/navigation/Root';
 import SWRConfigContext from './src/context/SWRConfigContext';
+import {RecoilRoot} from 'recoil';
 
 function App(): JSX.Element {
   return (
     <SWRConfigContext>
-      <Root />
+      <RecoilRoot>
+        <Root />
+      </RecoilRoot>
     </SWRConfigContext>
   );
 }
