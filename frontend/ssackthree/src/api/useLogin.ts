@@ -5,13 +5,23 @@ import customAxios from './customAxios';
 import useSWR from 'swr';
 import {meData} from '../service/atom';
 
-async function login(setProfile: SetterOrUpdater<AuthUser>): Promise<AuthUser> {
+export type LoginProps = {
+  username: string;
+  password: string;
+  setProfile: SetterOrUpdater<AuthUser>;
+};
+
+async function login({
+  username,
+  password,
+  setProfile,
+}: LoginProps): Promise<AuthUser> {
   const {data} = await customAxios().then(
     res =>
       res &&
       res.post('/api/user/login', {
-        username: 'hyeju',
-        password: '123123',
+        username,
+        password,
       }),
   );
 
@@ -22,6 +32,8 @@ async function login(setProfile: SetterOrUpdater<AuthUser>): Promise<AuthUser> {
   );
 
   setProfile({...parsedData, imageURL});
+
+  console.log(parsedData);
 
   return parsedData;
 }
@@ -36,8 +48,8 @@ export default function useAuth() {
 
   const [_, setProfile] = useRecoilState(meData);
 
-  const handleLogin = () => {
-    return mutate(() => login(setProfile));
+  const handleLogin = (username: string, password: string) => {
+    return mutate(() => login({username, password, setProfile}));
   };
 
   const handleLogout = () => {

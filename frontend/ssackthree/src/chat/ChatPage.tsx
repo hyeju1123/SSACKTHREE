@@ -1,7 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput, Image, StyleSheet,ImageSourcePropType } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import IonIcon from 'react-native-vector-icons/Ionicons';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  StyleSheet,
+  ImageSourcePropType,
+} from 'react-native';
+
+import {ChatStackParamList} from '../navigation/ChatStack';
+
+export type ChatPageProps = NativeStackScreenProps<
+  ChatStackParamList,
+  'ChatPage'
+>;
 
 interface ChatItem {
   id: number;
@@ -12,14 +27,15 @@ interface ChatItem {
   unreadCount: number;
 }
 
-const Chatpage: React.FC = () => {
+export default function ChatPage({navigation}: ChatPageProps) {
   const [chatData, setChatData] = useState<ChatItem[]>([
     {
       id: 1,
       profileImage: 'https://via.placeholder.com/150',
       name: '가게이름',
       role: '점주',
-      message: '마감시간이 10분 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ연장되어 채팅드립니다',
+      message:
+        '마감시간이 10분 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ연장되어 채팅드립니다',
       unreadCount: 2,
     },
     {
@@ -30,62 +46,53 @@ const Chatpage: React.FC = () => {
       message: '알겠습니다.',
       unreadCount: 0,
     },
-
   ]);
 
-  const navigation = useNavigation();
-
-  const renderChatItem = ({ item }: { item: ChatItem }) => {
-    const { profileImage, name, role, message, unreadCount } = item;
+  const renderChatItem = ({item}: {item: ChatItem}) => {
+    const {profileImage, name, role, message, unreadCount} = item;
 
     return (
-      <TouchableOpacity style={styles.chatItemContainer} onPress={() => navigation.navigate('ChatScreen', { name,role })}>
-        <Image source={{ uri: profileImage }} style={styles.profileImage} />
+      <TouchableOpacity
+        style={styles.chatItemContainer}
+        onPress={() => navigation.navigate('ChatScreen', {name, role})}>
+        <Image source={{uri: profileImage}} style={styles.profileImage} />
         <View style={styles.chatItemContent}>
           <View style={styles.chatItemHeader}>
             <Text style={styles.name}>{name}</Text>
             <Text style={styles.role}>{role}</Text>
           </View>
           <View style={styles.chatItemBody}>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.message}>{message}</Text>
-            {unreadCount > 0 && <View style={styles.unreadBadge}><Text style={styles.unreadCount}>{unreadCount}</Text></View>}
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.message}>
+              {message}
+            </Text>
+            {unreadCount > 0 && (
+              <View style={styles.unreadBadge}>
+                <Text style={styles.unreadCount}>{unreadCount}</Text>
+              </View>
+            )}
           </View>
         </View>
       </TouchableOpacity>
     );
   };
-  
 
   return (
     <View style={styles.container}>
-      <View style={styles.appBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <IonIcon name="chevron-back-outline" size={30} color="#616161" />
-        </TouchableOpacity>
-        <Text style={styles.pageTitle}>채팅</Text>
-      </View>
-      <View style={styles.container2}>
       <FlatList
         data={chatData}
         renderItem={renderChatItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={item => item.id.toString()}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
-      </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding:1,
-    backgroundColor:'white'
-  },
-  container2: {
-    flex: 1,
-    padding:10,
-    backgroundColor:'white'
+    padding: 10,
+    backgroundColor: 'white',
   },
   appBar: {
     flexDirection: 'row',
@@ -100,7 +107,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: 'black',
-    marginRight: 30,
   },
   chatItemContainer: {
     flexDirection: 'row',
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    marginTop:5,
+    marginTop: 5,
   },
   chatItemContent: {
     marginLeft: 16,
@@ -121,17 +127,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    
   },
   name: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginRight:5,
-    color:'black'
+    marginRight: 5,
+    color: 'black',
   },
   role: {
     fontSize: 13,
-    color:'black'
+    color: 'black',
   },
   chatItemBody: {
     flexDirection: 'row',
@@ -140,8 +145,8 @@ const styles = StyleSheet.create({
   message: {
     flex: 1,
     fontSize: 15,
-    marginRight:10,
-    color:'black'
+    marginRight: 10,
+    color: 'black',
   },
   unreadBadge: {
     width: 30,
@@ -162,5 +167,3 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
 });
-
-export default Chatpage;

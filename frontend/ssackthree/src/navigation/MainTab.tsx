@@ -15,7 +15,8 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import HomeStack from './HomeStack';
 import NeighborStack from './NeighborStack';
 import ReceiptPage from '../receipt/ReceiptPage';
-import ChatPage from '../chat/ChatPage';
+import ChatStack from './ChatStack';
+import ChatScreen from '../chat/ChatScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -58,7 +59,7 @@ export default function MainTab(): JSX.Element {
         <Tab.Screen name="홈" component={HomeStack} />
         <Tab.Screen name="우리동네" component={NeighborStack} />
         <Tab.Screen name="주문/흥정 내역" component={ReceiptPage} />
-        <Tab.Screen name="채팅" component={ChatPage} />
+        <Tab.Screen name="채팅" component={ChatScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );

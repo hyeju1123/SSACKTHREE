@@ -1,51 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {ChatStackParamList} from '../navigation/ChatStack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-const ChatScreen = () => {
-  const [messages, setMessages] = useState<Array<{ text: string; sender: string; time: number; date: string }>>([]);
+export type ChatScreenProps = NativeStackScreenProps<
+  ChatStackParamList,
+  'ChatScreen'
+>;
+
+export default function ChatScreen({navigation, route}: ChatScreenProps) {
+  // const {name, role} = route.params;
+  const [messages, setMessages] = useState<
+    Array<{text: string; sender: string; time: number; date: string}>
+  >([]);
   const [inputText, setInputText] = useState('');
-
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { name, role } = route.params;
 
   const handleSendMessage = () => {
     if (inputText.trim() !== '') {
       const currentTime = new Date().getTime();
       const currentDate = new Date().toLocaleDateString('ko-KR');
-      setMessages((prevMessages) => [
+      setMessages(prevMessages => [
         ...prevMessages,
-        { text: inputText, sender: 'me', time: currentTime, date: currentDate },
+        {text: inputText, sender: 'me', time: currentTime, date: currentDate},
       ]);
       setInputText('');
     }
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const receivedMessage = '상대방이 보낸 메시지';
-      const currentTime = new Date().getTime();
-      const currentDate = new Date().toLocaleDateString('ko-KR');
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: receivedMessage, sender: 'other', time: currentTime, date: currentDate },
-      ]);
-    }, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
   const formatTime = (timestamp: number) => {
     const date = new Date(timestamp);
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`;
     return formattedTime;
   };
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const receivedMessage = '상대방이 보낸 메시지';
+  //     const currentTime = new Date().getTime();
+  //     const currentDate = new Date().toLocaleDateString('ko-KR');
+  //     setMessages(prevMessages => [
+  //       ...prevMessages,
+  //       {
+  //         text: receivedMessage,
+  //         sender: 'other',
+  //         time: currentTime,
+  //         date: currentDate,
+  //       },
+  //     ]);
+  //   }, 5000);
+
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -55,8 +74,8 @@ const ChatScreen = () => {
         </TouchableOpacity>
         <View style={styles.pageContainer}>
           <View style={styles.pageTitleContainer}>
-            <Text style={styles.pageTitle}>{name}</Text>
-            <Text style={styles.pageTitle2}>{role}</Text>
+            <Text style={styles.pageTitle}>"닉닉닉"</Text>
+            <Text style={styles.pageTitle2}>"점주"</Text>
           </View>
         </View>
       </View>
@@ -70,15 +89,20 @@ const ChatScreen = () => {
 
           return (
             <React.Fragment key={index}>
-              {shouldDisplayDate && <Text style={styles.dateSeparator}>{currentDate}</Text>}
+              {shouldDisplayDate && (
+                <Text style={styles.dateSeparator}>{currentDate}</Text>
+              )}
               <View
                 style={[
                   styles.messageItem,
-                  message.sender === 'me' ? styles.myMessage : styles.otherMessage,
-                ]}
-              >
+                  message.sender === 'me'
+                    ? styles.myMessage
+                    : styles.otherMessage,
+                ]}>
                 <Text style={styles.messageText}>{message.text}</Text>
-                <Text style={styles.messageTime}>{formatTime(message.time)}</Text>
+                <Text style={styles.messageTime}>
+                  {formatTime(message.time)}
+                </Text>
               </View>
             </React.Fragment>
           );
@@ -98,7 +122,7 @@ const ChatScreen = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -188,5 +212,3 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
-
-export default ChatScreen;
