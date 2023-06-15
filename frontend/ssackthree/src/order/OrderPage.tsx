@@ -10,6 +10,7 @@ import {Text} from '../components/text';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../navigation/HomeStack';
 import {convertTime, formatPrice} from '../service/calculator';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 
 export type OrderPageProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -26,9 +27,11 @@ export default function OrderPage({route}: OrderPageProps): JSX.Element {
     originalPrice,
     imagePath,
   } = menuDetail;
+  const tabBarHeight = useBottomTabBarHeight();
+  const height = Dimensions.get('window').height - tabBarHeight + 25;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {minHeight: height}]}>
       <Image source={{uri: imagePath}} style={styles.backgroundImage} />
       <View style={styles.infoBox}>
         <Text style={styles.foodNameText}>{name}</Text>
@@ -70,13 +73,11 @@ export default function OrderPage({route}: OrderPageProps): JSX.Element {
 }
 
 const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     width: width,
-    minHeight: height,
   },
   backgroundImage: {
     width: '100%',

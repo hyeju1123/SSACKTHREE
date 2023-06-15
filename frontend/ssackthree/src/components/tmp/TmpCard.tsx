@@ -1,22 +1,22 @@
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
-import {Text} from './text';
+import {Text} from '../../components/text';
 
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
-export default function LatestProductsCard(): JSX.Element {
+export default function TmpCard(): JSX.Element {
   return (
     <>
       <View style={styles.cardContainer}>
         <Image
-          source={require('../../images/sandwich.jpg')}
+          source={require('../../../images/donut.png')}
           style={styles.foodImage}
         />
         <View style={styles.infoBox}>
           <View style={styles.foodInfoContainer}>
             <View style={styles.foodTitleBox}>
-              <Text style={styles.foodTitleText}>클럽 샌드위치</Text>
+              <Text style={styles.foodTitleText}>딸기 도너츠</Text>
               <IonIcon name="heart-outline" size={15} color={'#FD8535'} />
             </View>
           </View>
@@ -24,10 +24,10 @@ export default function LatestProductsCard(): JSX.Element {
             <View>
               <View style={styles.discountingLine} />
               <Text style={styles.discountedText}>￦ 5,000</Text>
-              <Text style={styles.priceText}>￦ 4,000</Text>
+              <Text style={styles.priceText}>￦ 4,500</Text>
             </View>
             <View style={styles.discountedRatioBox}>
-              <Text style={styles.discountedRatioText}>20%</Text>
+              <Text style={styles.discountedRatioText}>10%</Text>
             </View>
           </View>
           <View style={styles.spaceBetweenBox}>

@@ -14,7 +14,7 @@ import StoreInfo from '../components/meneDetail/StoreInfo';
 import ProductDetailReview from '../components/meneDetail/ProductDetailReview';
 import usePost from '../api/usePost';
 import StoreHeader from '../components/meneDetail/StoreHeader';
-import MenuActionBar from '../components/meneDetail/MenuActionBar';
+import TabBar from '../components/TabBar';
 
 export type ProductPageProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -25,9 +25,10 @@ export default function ProductDetailPage({
   navigation,
   route,
 }: ProductPageProps): JSX.Element {
-  const [storeInfoState, setstoreInfoState] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const {postId} = route.params;
   const {postData} = usePost(postId);
+  const menuTexts = ['메뉴', '가게정보', '리뷰'];
 
   return (
     <>
@@ -41,21 +42,22 @@ export default function ProductDetailPage({
             />
             <View style={styles.detailsContainer}>
               <StoreHeader post={postData} />
-              <MenuActionBar
-                storeInfoState={storeInfoState}
-                setstoreInfoState={setstoreInfoState}
+              <TabBar
+                menuTexts={menuTexts}
+                activeIndex={activeIndex}
+                setActiveIndex={setActiveIndex}
               />
-              {storeInfoState === 0 && (
+              {activeIndex === 0 && (
                 <ProductDetailMenu
                   post={postData}
                   navigation={navigation}
                   route={route}
                 />
               )}
-              {storeInfoState === 1 && (
+              {activeIndex === 1 && (
                 <StoreInfo menuStore={postData.menuStore} />
               )}
-              {storeInfoState === 2 && <ProductDetailReview />}
+              {activeIndex === 2 && <ProductDetailReview />}
             </View>
           </ScrollView>
         </View>

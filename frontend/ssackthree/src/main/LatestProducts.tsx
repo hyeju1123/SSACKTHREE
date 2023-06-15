@@ -3,6 +3,7 @@ import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {Text} from '../components/text';
 import LatestProductsCard from '../components/LatestProductCard';
 import {HomeAndNeighborProps} from '../navigation/types';
+import TmpCard from '../components/tmp/TmpCard';
 
 export default function LatestProducts({
   navigation,
@@ -12,18 +13,21 @@ export default function LatestProducts({
       <Text style={styles.h1Text}>방금 올라온 상품이에요 👀</Text>
       <ScrollView style={styles.scrollViewStyle}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Product', {postId: 2})}>
+          onPress={() => navigation.navigate('Product', {postId: 3})}>
           <LatestProductsCard />
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Product', {postId: 4})}>
+          <TmpCard />
+        </TouchableOpacity>
+        {/* <LatestProductsCard />
         <LatestProductsCard />
         <LatestProductsCard />
         <LatestProductsCard />
         <LatestProductsCard />
         <LatestProductsCard />
         <LatestProductsCard />
-        <LatestProductsCard />
-        <LatestProductsCard />
-        <LatestProductsCard />
+        <LatestProductsCard /> */}
       </ScrollView>
     </View>
   );

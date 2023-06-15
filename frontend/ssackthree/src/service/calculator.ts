@@ -4,7 +4,7 @@ export const convertTime = (saleEndTime: string) => {
 };
 
 export const calcDiscountRate = (original: number, discounted: number) => {
-  return ((original - discounted) / original) * 100;
+  return Math.ceil(((original - discounted) / original) * 100);
 };
 
 export const formatPhoneNumber = (phoneNum: string) => {
