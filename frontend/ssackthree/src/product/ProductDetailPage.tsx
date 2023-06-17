@@ -15,6 +15,8 @@ import ProductDetailReview from '../components/meneDetail/ProductDetailReview';
 import usePost from '../api/usePost';
 import StoreHeader from '../components/meneDetail/StoreHeader';
 import TabBar from '../components/TabBar';
+import {useRecoilValue} from 'recoil';
+import {meData} from '../service/atom';
 
 export type ProductPageProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -27,8 +29,11 @@ export default function ProductDetailPage({
 }: ProductPageProps): JSX.Element {
   const [activeIndex, setActiveIndex] = useState(0);
   const {postId} = route.params;
-  const {postData} = usePost(postId);
+  const {userId} = useRecoilValue(meData);
+  const {postData} = usePost(postId, parseInt(userId, 10));
   const menuTexts = ['메뉴', '가게정보', '리뷰'];
+
+  console.log(postData);
 
   return (
     <>

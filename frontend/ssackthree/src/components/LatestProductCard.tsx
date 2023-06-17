@@ -4,34 +4,63 @@ import {Text} from './text';
 
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {Menu} from '../model/menu';
+import {calcDiscountRate} from '../service/calculator';
 
-export default function LatestProductsCard(): JSX.Element {
+type Props = {
+  menu: Menu;
+};
+
+export default function LatestProductsCard({menu}: Props): JSX.Element {
+  const {
+    name,
+    originalPrice,
+    discountedPrice,
+    distance,
+    storeName,
+    menuImagePath,
+    isLike,
+  } = menu;
+
+  function addCommasToPrice(price: number) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   return (
     <>
       <View style={styles.cardContainer}>
-        <Image
-          source={require('../../images/sandwich.jpg')}
-          style={styles.foodImage}
-        />
+        <Image source={{uri: menuImagePath}} style={styles.foodImage} />
         <View style={styles.infoBox}>
           <View style={styles.foodInfoContainer}>
             <View style={styles.foodTitleBox}>
-              <Text style={styles.foodTitleText}>클럽 샌드위치</Text>
-              <IonIcon name="heart-outline" size={15} color={'#FD8535'} />
+              <Text style={styles.foodTitleText}>{name}</Text>
+              {isLike === 'T' ? (
+                <IonIcon name="heart" size={15} color={'#FD8535'} />
+              ) : (
+                <IonIcon name="heart-outline" size={15} color={'#FD8535'} />
+              )}
             </View>
           </View>
           <View style={styles.spaceBetweenBox}>
             <View>
               <View style={styles.discountingLine} />
-              <Text style={styles.discountedText}>￦ 5,000</Text>
-              <Text style={styles.priceText}>￦ 4,000</Text>
+              <Text style={styles.discountedText}>
+                ￦ {addCommasToPrice(originalPrice)}
+              </Text>
+              <Text style={styles.priceText}>
+                ￦ {addCommasToPrice(discountedPrice)}
+              </Text>
             </View>
             <View style={styles.discountedRatioBox}>
-              <Text style={styles.discountedRatioText}>20%</Text>
+              <Text style={styles.discountedRatioText}>
+                {calcDiscountRate(originalPrice, discountedPrice)}%
+              </Text>
             </View>
           </View>
           <View style={styles.spaceBetweenBox}>
-            <Text style={styles.distanceText}>이한빵집 | 200m</Text>
+            <Text style={styles.distanceText}>
+              {storeName} | {Math.round(distance)}m
+            </Text>
             <View style={styles.reviewPointBox}>
               <FaIcon name="star" size={13} color={'#ffc107'} />
               <Text style={styles.reviewPointText}>4.2</Text>

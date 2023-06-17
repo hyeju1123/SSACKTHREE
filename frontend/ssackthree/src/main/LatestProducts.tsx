@@ -3,31 +3,31 @@ import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {Text} from '../components/text';
 import LatestProductsCard from '../components/LatestProductCard';
 import {HomeAndNeighborProps} from '../navigation/types';
-import TmpCard from '../components/tmp/TmpCard';
+import useMenu from '../api/useMenu';
+import {useOption} from '../context/OptionContext';
 
 export default function LatestProducts({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
+  const {SORT, BARGAIN} = useOption();
+  const {menuData, isValidating} = useMenu();
+  console.log('sortType in Latest;::', SORT, BARGAIN);
+  console.log(menuData);
+
   return (
     <View style={styles.latestProductsContainer}>
       <Text style={styles.h1Text}>방금 올라온 상품이에요 👀</Text>
       <ScrollView style={styles.scrollViewStyle}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Product', {postId: 3})}>
-          <LatestProductsCard />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Product', {postId: 4})}>
-          <TmpCard />
-        </TouchableOpacity>
-        {/* <LatestProductsCard />
-        <LatestProductsCard />
-        <LatestProductsCard />
-        <LatestProductsCard />
-        <LatestProductsCard />
-        <LatestProductsCard />
-        <LatestProductsCard />
-        <LatestProductsCard /> */}
+        {isValidating && <Text>is Loading...</Text>}
+        {menuData?.map((menu, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() =>
+              navigation.navigate('Product', {postId: menu.menuId})
+            }>
+            <LatestProductsCard menu={menu} />
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
   );

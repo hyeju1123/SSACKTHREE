@@ -11,16 +11,16 @@ export default function OptionTags({page}: pageTypeProps): JSX.Element {
   return (
     <View style={styles.optionTagsContainer}>
       <ScrollView horizontal={true}>
-        <TagDropdown name="최신순" />
+        <TagDropdown optionType="SORT" />
         {page === 'HOME' ? (
           <>
-            <TagDropdown name="흥정없음" />
-            <TagButton name="유통기한 임박" />
-            <TagButton name="b급 상품" />
-            <TagButton name="주문 착오 상품" />
+            <TagDropdown optionType="BARGAIN" />
+            <TagButton name="EXPIRATION" />
+            <TagButton name="B" />
+            <TagButton name="WRONG_ORDER" />
           </>
         ) : (
-          <TagButton name="내 상품" />
+          <TagButton name="IS_MINE" />
         )}
       </ScrollView>
     </View>
