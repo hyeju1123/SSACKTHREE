@@ -13,6 +13,7 @@ export type MenuDetail = {
   originalPrice: number;
   discountedPrice: number;
   imagePath: string;
+  isMenuLike: string;
 };
 
 export type MenuStore = {

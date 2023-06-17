@@ -30,10 +30,12 @@ export default function ProductDetailPage({
   const [activeIndex, setActiveIndex] = useState(0);
   const {postId} = route.params;
   const {userId} = useRecoilValue(meData);
-  const {postData} = usePost(postId, parseInt(userId, 10));
+  const {postData, handleLike} = usePost(postId, parseInt(userId, 10));
   const menuTexts = ['메뉴', '가게정보', '리뷰'];
 
-  console.log(postData);
+  const onLike = (add: boolean) => {
+    handleLike(add, postId);
+  };
 
   return (
     <>
@@ -54,6 +56,7 @@ export default function ProductDetailPage({
               />
               {activeIndex === 0 && (
                 <ProductDetailMenu
+                  onLike={onLike}
                   post={postData}
                   navigation={navigation}
                   route={route}

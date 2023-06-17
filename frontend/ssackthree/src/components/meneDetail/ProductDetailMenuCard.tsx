@@ -12,10 +12,12 @@ import {
 } from '../../service/calculator';
 
 type Props = {
+  onLike: (add: boolean) => void;
   post: DetailPost;
 } & ProductPageProps;
 
 export default function ProductDetailMenuCard({
+  onLike,
   post,
   navigation,
 }: Props): JSX.Element {
@@ -28,6 +30,7 @@ export default function ProductDetailMenuCard({
       originalPrice,
       discountedPrice,
       imagePath,
+      isMenuLike,
     },
   } = post;
   const bargain = isBargainning === 'T' ? true : false;
@@ -40,7 +43,15 @@ export default function ProductDetailMenuCard({
           <View style={styles.foodInfoContainer}>
             <View style={styles.foodTitleBox}>
               <Text style={styles.foodTitleText}>{name}</Text>
-              <IonIcon name="heart-outline" size={15} color={'#FD8535'} />
+              {isMenuLike === 'T' ? (
+                <TouchableOpacity onPress={() => onLike(false)}>
+                  <IonIcon name="heart" size={15} color={'#FD8535'} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => onLike(true)}>
+                  <IonIcon name="heart-outline" size={15} color={'#FD8535'} />
+                </TouchableOpacity>
+              )}
             </View>
             {bargain && (
               <View style={styles.bargainInfoBox}>
