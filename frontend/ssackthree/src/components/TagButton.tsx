@@ -23,7 +23,7 @@ const optionMap: OptionMapProps = {
 
 export default function TagButton({name}: OptionName): JSX.Element {
   const [selected, setSelected] = useState(false);
-  const {handleOptions, PRODUCT} = useOption();
+  const {PRODUCT, handleOptions} = useOption();
 
   const handleSelect = () => {
     if (selected) {

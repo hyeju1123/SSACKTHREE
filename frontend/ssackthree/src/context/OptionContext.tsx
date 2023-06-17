@@ -1,5 +1,4 @@
-import {createContext, useContext, useState} from 'react';
-import useMenu from '../api/useMenu';
+import {createContext, useCallback, useContext, useState} from 'react';
 
 type OptionContextValue = {
   [index: string]: string | string[];
@@ -22,16 +21,14 @@ export const OptionContext = createContext<OptionContextValue>({
 });
 
 export const OptionProvider: React.FC = ({children}) => {
-  const {mutate} = useMenu();
   const [options, setOptions] = useState<OptionContextValue>(optionTypes);
 
-  const handleOptions = (option: string, value: string | string[]) => {
+  const handleOptions = useCallback((option: string, value: string) => {
     setOptions(prevOptions => ({
       ...prevOptions,
       [option]: value,
     }));
-    mutate();
-  };
+  }, []);
 
   return (
     <OptionContext.Provider value={{...options, handleOptions}}>

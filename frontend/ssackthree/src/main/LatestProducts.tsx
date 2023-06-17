@@ -1,18 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {Text} from '../components/text';
 import LatestProductsCard from '../components/LatestProductCard';
 import {HomeAndNeighborProps} from '../navigation/types';
 import useMenu from '../api/useMenu';
-import {useOption} from '../context/OptionContext';
 
 export default function LatestProducts({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
-  const {SORT, BARGAIN} = useOption();
-  const {menuData, isValidating} = useMenu();
-  console.log('sortType in Latest;::', SORT, BARGAIN);
-  console.log(menuData);
+  const {menuData, isValidating, mutate} = useMenu();
+
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      mutate();
+    });
+
+    return () => {
+      unsubscribeFocus();
+    };
+  }, []);
 
   return (
     <View style={styles.latestProductsContainer}>

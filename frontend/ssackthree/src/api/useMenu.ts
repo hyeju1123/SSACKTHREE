@@ -6,6 +6,7 @@ import {useOption} from '../context/OptionContext';
 import {useRecoilValue} from 'recoil';
 import {AuthUser} from '../model/user';
 import {meData} from '../service/atom';
+import {useEffect} from 'react';
 
 type OptionMapProps = {
   [index: string]: string;
@@ -48,7 +49,13 @@ export default function useMenu() {
     ),
   );
 
-  console.log('menu data::: ', menuData);
+  useEffect(() => {
+    setTimeout(() => {
+      mutate();
+    }, 500);
+  }, [SORT, BARGAIN, PRODUCT]);
+
+  console.log('menu data::: ', data);
 
   return {menuData, error, isLoading, isValidating, mutate};
 }
