@@ -6,7 +6,7 @@ import ChatScreen from '../chat/ChatScreen';
 
 export type ChatStackParamList = {
   ChatPage: undefined;
-  ChatScreen: {name: string; role: string};
+  ChatScreen: {name: string; role: string; userId: string};
 };
 
 const Stack = createNativeStackNavigator<ChatStackParamList>();

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -10,61 +10,91 @@ import {
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {ChatStackParamList} from '../navigation/ChatStack';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {LOCAL_IP} from '../ipConfig';
+import customAxios from '../api/customAxios';
 
 export type ChatScreenProps = NativeStackScreenProps<
   ChatStackParamList,
   'ChatScreen'
 >;
 
+export type ChatMessageProps = {
+  content: string;
+  createdDate: string;
+  writerId: number;
+};
+
 export default function ChatScreen({navigation, route}: ChatScreenProps) {
-  // const {name, role} = route.params;
-  const [messages, setMessages] = useState<
-    Array<{text: string; sender: string; time: number; date: string}>
-  >([]);
+  const {name, role, userId} = route.params;
+  const ws = useRef<WebSocket | null>(null);
+
   const [inputText, setInputText] = useState('');
+  const [messages, setMessages] = useState<ChatMessageProps[]>([]);
 
   const handleSendMessage = () => {
-    if (inputText.trim() !== '') {
-      const currentTime = new Date().getTime();
-      const currentDate = new Date().toLocaleDateString('ko-KR');
-      setMessages(prevMessages => [
-        ...prevMessages,
-        {text: inputText, sender: 'me', time: currentTime, date: currentDate},
-      ]);
-      setInputText('');
+    const sendingData = {
+      senderId: userId,
+      roomId: 9,
+      receiverId: 5,
+      content: inputText,
+    };
+    const updateData = {
+      content: inputText,
+      createdDate: '',
+      writerId: parseInt(userId, 10),
+    };
+    setMessages(m => [...m, updateData]);
+    ws.current && ws.current.send(JSON.stringify(sendingData));
+    setInputText('');
+  };
+
+  const convertTimeFormat = (dateString: string) => {
+    if (dateString === '') {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1;
+      const day = currentDate.getDate();
+
+      return `${year}년 ${month}월 ${day}일`;
     }
+
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return `${year}년 ${month}월 ${day}일`;
   };
 
-  const formatTime = (timestamp: number) => {
-    const date = new Date(timestamp);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
-    return formattedTime;
+  const getMessages = () => {
+    const roomId = 9;
+    const url = `/api/chat/content/${roomId}`;
+    customAxios()
+      .then(res => res && res.get(url))
+      .then(res => setMessages(res.data));
   };
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     const receivedMessage = '상대방이 보낸 메시지';
-  //     const currentTime = new Date().getTime();
-  //     const currentDate = new Date().toLocaleDateString('ko-KR');
-  //     setMessages(prevMessages => [
-  //       ...prevMessages,
-  //       {
-  //         text: receivedMessage,
-  //         sender: 'other',
-  //         time: currentTime,
-  //         date: currentDate,
-  //       },
-  //     ]);
-  //   }, 5000);
+  useEffect(() => {
+    getMessages();
 
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
+    ws.current = new WebSocket(`ws://${LOCAL_IP}:8080/ws/chat`, [], {
+      headers: {userId: JSON.stringify(route.params.userId)},
+    });
+    ws.current.onopen = () => {
+      console.log('connected');
+    };
+
+    ws.current.onmessage = e => {
+      setMessages(m => [
+        ...m,
+        {
+          content: e.data,
+          createdDate: '',
+          writerId: 5,
+        },
+      ]);
+    };
+  }, [route.params]);
 
   return (
     <View style={styles.container}>
@@ -74,39 +104,40 @@ export default function ChatScreen({navigation, route}: ChatScreenProps) {
         </TouchableOpacity>
         <View style={styles.pageContainer}>
           <View style={styles.pageTitleContainer}>
-            <Text style={styles.pageTitle}>"닉닉닉"</Text>
-            <Text style={styles.pageTitle2}>"점주"</Text>
+            <Text style={styles.pageTitle}>{name}</Text>
+            <Text style={styles.pageTitle2}>{role}</Text>
           </View>
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.messagesContainer}>
-        {messages.map((message, index) => {
-          const previousMessage = messages[index - 1];
-          const currentDate = message.date;
-          const previousDate = previousMessage?.date;
+        {messages &&
+          messages.map(({content, writerId, createdDate}, index) => {
+            const previousMessage = messages[index - 1];
+            const currentDate = convertTimeFormat(createdDate);
+            const previousDate = convertTimeFormat(
+              previousMessage?.createdDate,
+            );
 
-          const shouldDisplayDate = currentDate !== previousDate;
+            const shouldDisplayDate = currentDate !== previousDate;
 
-          return (
-            <React.Fragment key={index}>
-              {shouldDisplayDate && (
-                <Text style={styles.dateSeparator}>{currentDate}</Text>
-              )}
-              <View
-                style={[
-                  styles.messageItem,
-                  message.sender === 'me'
-                    ? styles.myMessage
-                    : styles.otherMessage,
-                ]}>
-                <Text style={styles.messageText}>{message.text}</Text>
-                <Text style={styles.messageTime}>
-                  {formatTime(message.time)}
-                </Text>
+            return (
+              <View key={index}>
+                {shouldDisplayDate && (
+                  <Text style={styles.dateSeparator}>{currentDate}</Text>
+                )}
+                <View
+                  style={[
+                    styles.messageItem,
+                    writerId === parseInt(userId, 10)
+                      ? styles.myMessage
+                      : styles.otherMessage,
+                  ]}>
+                  <Text style={styles.messageText}>{content}</Text>
+                  <Text style={styles.messageTime}>{currentDate}</Text>
+                </View>
               </View>
-            </React.Fragment>
-          );
-        })}
+            );
+          })}
       </ScrollView>
       <View style={styles.inputContainer}>
         <TextInput

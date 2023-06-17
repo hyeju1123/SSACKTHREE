@@ -1,17 +1,20 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
   FlatList,
   TouchableOpacity,
-  TextInput,
   Image,
   StyleSheet,
-  ImageSourcePropType,
+  ScrollView,
 } from 'react-native';
 
 import {ChatStackParamList} from '../navigation/ChatStack';
+import {useRecoilValue} from 'recoil';
+import {AuthUser} from '../model/user';
+import {meData} from '../service/atom';
+import useChat from '../api/useChat';
 
 export type ChatPageProps = NativeStackScreenProps<
   ChatStackParamList,
@@ -28,25 +31,8 @@ interface ChatItem {
 }
 
 export default function ChatPage({navigation}: ChatPageProps) {
-  const [chatData, setChatData] = useState<ChatItem[]>([
-    {
-      id: 1,
-      profileImage: 'https://via.placeholder.com/150',
-      name: '가게이름',
-      role: '점주',
-      message:
-        '마감시간이 10분 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ연장되어 채팅드립니다',
-      unreadCount: 2,
-    },
-    {
-      id: 2,
-      profileImage: 'https://via.placeholder.com/150',
-      name: '눈송와플집',
-      role: '점주',
-      message: '알겠습니다.',
-      unreadCount: 0,
-    },
-  ]);
+  const {userId} = useRecoilValue<AuthUser>(meData);
+  const {chatRoomData} = useChat(userId);
 
   const renderChatItem = ({item}: {item: ChatItem}) => {
     const {profileImage, name, role, message, unreadCount} = item;
@@ -54,7 +40,8 @@ export default function ChatPage({navigation}: ChatPageProps) {
     return (
       <TouchableOpacity
         style={styles.chatItemContainer}
-        onPress={() => navigation.navigate('ChatScreen', {name, role})}>
+        // onPress={() => navigation.navigate('ChatScreen', {name, role})}
+      >
         <Image source={{uri: profileImage}} style={styles.profileImage} />
         <View style={styles.chatItemContent}>
           <View style={styles.chatItemHeader}>
@@ -78,12 +65,38 @@ export default function ChatPage({navigation}: ChatPageProps) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={chatData}
-        renderItem={renderChatItem}
-        keyExtractor={item => item.id.toString()}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+      <ScrollView>
+        {chatRoomData &&
+          chatRoomData
+            .reverse()
+            .map(({counterpartName, counterpartProfile, counterpartRole}) => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('ChatScreen', {
+                    name: counterpartName,
+                    role: counterpartRole,
+                    userId: userId,
+                  })
+                }
+                key={counterpartName}
+                style={styles.chatItemContainer}>
+                <Image
+                  source={
+                    counterpartProfile
+                      ? {uri: counterpartProfile}
+                      : require('../../images/olaf.jpeg')
+                  }
+                  style={styles.profileImage}
+                />
+                <View style={styles.chatItemContent}>
+                  <View style={styles.chatItemHeader}>
+                    <Text style={styles.name}>{counterpartName}</Text>
+                    <Text style={styles.role}>{counterpartRole}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+      </ScrollView>
     </View>
   );
 }
