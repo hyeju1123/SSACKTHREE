@@ -8,11 +8,13 @@ import {ProductPageProps} from '../../product/ProductDetailPage';
 import {DetailPost} from '../../model/post';
 
 type Props = {
+  postId: number;
   onLike: (add: boolean) => void;
   post: DetailPost;
 } & ProductPageProps;
 
 export default function ProductDetailMenu({
+  postId,
   onLike,
   post,
   navigation,
@@ -23,6 +25,7 @@ export default function ProductDetailMenu({
   return (
     <>
       <ProductDetailMenuCard
+        postId={postId}
         onLike={onLike}
         post={post}
         route={route}

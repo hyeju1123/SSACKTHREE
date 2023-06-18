@@ -12,11 +12,13 @@ import {
 } from '../../service/calculator';
 
 type Props = {
+  postId: number;
   onLike: (add: boolean) => void;
   post: DetailPost;
 } & ProductPageProps;
 
 export default function ProductDetailMenuCard({
+  postId,
   onLike,
   post,
   navigation,
@@ -101,7 +103,10 @@ export default function ProductDetailMenuCard({
       <TouchableOpacity
         style={styles.buyButton}
         onPress={() =>
-          navigation.navigate('Order', {menuDetail: post.menuDetail})
+          navigation.navigate('Order', {
+            post: post,
+            postId: postId,
+          })
         }>
         <Text style={styles.buyText}>구매하러 가기</Text>
       </TouchableOpacity>

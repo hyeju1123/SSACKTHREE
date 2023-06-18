@@ -5,13 +5,15 @@ import MainPage from '../main/MainPage';
 import ProductDetailPage from '../product/ProductDetailPage';
 import OrderPage from '../order/OrderPage';
 import MyPageStack from './MyPageStack';
-import {MenuDetail} from '../model/post';
+import {DetailPost} from '../model/post';
 import PostCodeStack from './PostCodeStack';
+import PayPage from '../order/PayPage';
 
 export type HomeStackParamList = {
   Home: undefined;
   Product: {postId: number};
-  Order: {menuDetail: MenuDetail};
+  Order: {post: DetailPost; postId: number};
+  Pay: {post: DetailPost; postId: number; userId: string};
   MyPageStack: undefined;
   PostCodeStack: undefined;
 };
@@ -42,6 +44,14 @@ export default function HomeStack(): JSX.Element {
         }}
         name="Order"
         component={OrderPage}
+      />
+      <Stack.Screen
+        options={{
+          headerTitle: '주문하기',
+          headerTitleAlign: 'center',
+        }}
+        name="Pay"
+        component={PayPage}
       />
       <Stack.Screen
         options={{headerShown: false}}

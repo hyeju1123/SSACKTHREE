@@ -56,6 +56,7 @@ export default function ProductDetailPage({
               />
               {activeIndex === 0 && (
                 <ProductDetailMenu
+                  postId={postId}
                   onLike={onLike}
                   post={postData}
                   navigation={navigation}
