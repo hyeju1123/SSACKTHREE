@@ -25,12 +25,14 @@ export default function PayPage({route}: PayPageProps): JSX.Element {
   } = post;
 
   const handlePay = async () => {
+    console.log(postId);
     const res = await doPay(
       parseInt(userId, 10),
       postId,
       name,
       discountedPrice,
     );
+    console.log(res);
   };
 
   return (
@@ -92,7 +94,7 @@ export default function PayPage({route}: PayPageProps): JSX.Element {
           <Text style={styles.buttonText}>결제하기</Text>
         </TouchableOpacity>
       </View>
-      {pay !== '' && <WebView source={{uri: payUrl}} style={{flex: 1}} />}
+      {payUrl !== '' && <WebView source={{uri: payUrl}} style={{flex: 1}} />}
     </>
   );
 }

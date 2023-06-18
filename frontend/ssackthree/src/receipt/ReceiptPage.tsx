@@ -1,12 +1,26 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Text} from '../components/text';
 import TabBar from '../components/TabBar';
-import ReceiptCard, {cardState} from '../components/receipt/ReceiptCard';
+import ReceiptCard from '../components/receipt/ReceiptCard';
+import {getReceipt} from '../api/useReceipt';
+import {useRecoilValue} from 'recoil';
+import {meData} from '../service/atom';
+import {Receipt} from '../model/receipt';
 
-export default function ReceiptPage(): JSX.Element {
+export default function ReceiptPage() {
+  const [receiptData, setReceiptData] = useState<Receipt[]>([]);
   const menuTexts = ['주문', '흥정'];
   const [activeIndex, setActiveIndex] = useState(0);
+  const {userId} = useRecoilValue(meData);
+
+  useEffect(() => {
+    const option = activeIndex === 0 ? 'order' : 'bargain';
+    getReceipt(parseInt(userId, 10), option).then(
+      data => data && setReceiptData(data),
+    );
+  }, [userId, activeIndex]);
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -18,15 +32,17 @@ export default function ReceiptPage(): JSX.Element {
         />
         {activeIndex === 0 ? (
           <>
-            <ReceiptCard state={cardState.orderComplete} />
-            <ReceiptCard state={cardState.orderComplete} />
+            {receiptData &&
+              receiptData.map((data, index) => (
+                <ReceiptCard data={data} key={index} />
+              ))}
           </>
         ) : (
           <>
-            <ReceiptCard state={cardState.bargaining} />
-            <ReceiptCard state={cardState.successBargain} />
-            <ReceiptCard state={cardState.bargainComplete} />
-            <ReceiptCard state={cardState.failedBargain} />
+            {receiptData &&
+              receiptData.map((data, index) => (
+                <ReceiptCard data={data} key={index} />
+              ))}
           </>
         )}
       </ScrollView>
