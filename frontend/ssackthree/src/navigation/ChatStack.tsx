@@ -6,7 +6,7 @@ import ChatScreen from '../chat/ChatScreen';
 
 export type ChatStackParamList = {
   ChatPage: undefined;
-  ChatScreen: {name: string; role: string; userId: string};
+  ChatScreen: {name: string; role: string; userId: string; roomId: number};
 };
 
 const Stack = createNativeStackNavigator<ChatStackParamList>();
@@ -27,9 +27,8 @@ export default function ChatStack(): JSX.Element {
       />
       <Stack.Screen
         options={{
-          headerTitle: '',
-          headerTransparent: true,
-          headerTintColor: 'white',
+          headerTitle: '채팅',
+          headerTitleAlign: 'center',
         }}
         name="ChatScreen"
         component={ChatScreen}

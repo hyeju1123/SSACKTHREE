@@ -3,7 +3,6 @@ import React from 'react';
 import {
   View,
   Text,
-  FlatList,
   TouchableOpacity,
   Image,
   StyleSheet,
@@ -21,47 +20,9 @@ export type ChatPageProps = NativeStackScreenProps<
   'ChatPage'
 >;
 
-interface ChatItem {
-  id: number;
-  profileImage: any;
-  name: string;
-  role: string;
-  message: string;
-  unreadCount: number;
-}
-
 export default function ChatPage({navigation}: ChatPageProps) {
   const {userId} = useRecoilValue<AuthUser>(meData);
   const {chatRoomData} = useChat(userId);
-
-  const renderChatItem = ({item}: {item: ChatItem}) => {
-    const {profileImage, name, role, message, unreadCount} = item;
-
-    return (
-      <TouchableOpacity
-        style={styles.chatItemContainer}
-        // onPress={() => navigation.navigate('ChatScreen', {name, role})}
-      >
-        <Image source={{uri: profileImage}} style={styles.profileImage} />
-        <View style={styles.chatItemContent}>
-          <View style={styles.chatItemHeader}>
-            <Text style={styles.name}>{name}</Text>
-            <Text style={styles.role}>{role}</Text>
-          </View>
-          <View style={styles.chatItemBody}>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.message}>
-              {message}
-            </Text>
-            {unreadCount > 0 && (
-              <View style={styles.unreadBadge}>
-                <Text style={styles.unreadCount}>{unreadCount}</Text>
-              </View>
-            )}
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -69,33 +30,41 @@ export default function ChatPage({navigation}: ChatPageProps) {
         {chatRoomData &&
           chatRoomData
             .reverse()
-            .map(({counterpartName, counterpartProfile, counterpartRole}) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('ChatScreen', {
-                    name: counterpartName,
-                    role: counterpartRole,
-                    userId: userId,
-                  })
-                }
-                key={counterpartName}
-                style={styles.chatItemContainer}>
-                <Image
-                  source={
-                    counterpartProfile
-                      ? {uri: counterpartProfile}
-                      : require('../../images/olaf.jpeg')
+            .map(
+              ({
+                chatRoomId,
+                counterpartName,
+                counterpartProfile,
+                counterpartRole,
+              }) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('ChatScreen', {
+                      name: counterpartName,
+                      role: counterpartRole,
+                      userId: userId,
+                      roomId: chatRoomId,
+                    })
                   }
-                  style={styles.profileImage}
-                />
-                <View style={styles.chatItemContent}>
-                  <View style={styles.chatItemHeader}>
-                    <Text style={styles.name}>{counterpartName}</Text>
-                    <Text style={styles.role}>{counterpartRole}</Text>
+                  key={counterpartName}
+                  style={styles.chatItemContainer}>
+                  <Image
+                    source={
+                      counterpartProfile
+                        ? {uri: counterpartProfile}
+                        : require('../../images/olaf.jpeg')
+                    }
+                    style={styles.profileImage}
+                  />
+                  <View style={styles.chatItemContent}>
+                    <View style={styles.chatItemHeader}>
+                      <Text style={styles.name}>{counterpartName}</Text>
+                      <Text style={styles.role}>{counterpartRole}</Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ),
+            )}
       </ScrollView>
     </View>
   );

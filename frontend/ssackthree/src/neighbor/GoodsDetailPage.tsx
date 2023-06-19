@@ -13,14 +13,15 @@ import useSecondhandDetail from '../api/useSecondhand';
 import {formatDateString, formatPrice} from '../service/calculator';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {NeighborStackParamList} from '../navigation/NeighborStack';
+import {makeChatRoom} from '../api/useChat';
 
 export type OrderPageProps = NativeStackScreenProps<
   NeighborStackParamList,
   'GoodsDetail'
 >;
 
-export default function GoodsDetailPage({route}: OrderPageProps) {
-  const {productId} = route.params;
+export default function GoodsDetailPage({route, navigation}: OrderPageProps) {
+  const {productId, userId} = route.params;
   const {secondhandDetailData} = useSecondhandDetail(productId.toString());
   console.log(secondhandDetailData);
   if (!secondhandDetailData) {
@@ -28,6 +29,7 @@ export default function GoodsDetailPage({route}: OrderPageProps) {
   }
 
   const {
+    writerId,
     content,
     createdDate,
     hopingPlaceAddress,
@@ -37,6 +39,19 @@ export default function GoodsDetailPage({route}: OrderPageProps) {
     title,
     townOtherProductResponseDtoList,
   } = secondhandDetailData;
+
+  const doChat = async () => {
+    const res = await makeChatRoom(parseInt(userId, 10), writerId);
+    if (!res) {
+      return;
+    }
+    navigation.navigate('ChatScreen', {
+      name: '',
+      role: '사용자',
+      roomId: res.roomId,
+      userId: userId,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -118,7 +133,9 @@ export default function GoodsDetailPage({route}: OrderPageProps) {
           <Text>이 판매자의 상품 더보기</Text>
           <IonIcon name="chevron-forward" size={20} color="#6d6d6d" />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, {backgroundColor: '#94E048'}]}>
+        <TouchableOpacity
+          onPress={doChat}
+          style={[styles.button, {backgroundColor: '#94E048'}]}>
           <Text style={styles.chatButtonText}>채팅하기</Text>
         </TouchableOpacity>
       </View>

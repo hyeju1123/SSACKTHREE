@@ -24,8 +24,8 @@ export type ChatMessageProps = {
   writerId: number;
 };
 
-export default function ChatScreen({navigation, route}: ChatScreenProps) {
-  const {name, role, userId} = route.params;
+export default function ChatScreen({route}: ChatScreenProps) {
+  const {name, role, userId, roomId} = route.params;
   const ws = useRef<WebSocket | null>(null);
 
   const [inputText, setInputText] = useState('');
@@ -67,7 +67,6 @@ export default function ChatScreen({navigation, route}: ChatScreenProps) {
   };
 
   const getMessages = () => {
-    const roomId = 9;
     const url = `/api/chat/content/${roomId}`;
     customAxios()
       .then(res => res && res.get(url))
@@ -99,9 +98,6 @@ export default function ChatScreen({navigation, route}: ChatScreenProps) {
   return (
     <View style={styles.container}>
       <View style={styles.appBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <IonIcon name="chevron-back-outline" size={30} color="#616161" />
-        </TouchableOpacity>
         <View style={styles.pageContainer}>
           <View style={styles.pageTitleContainer}>
             <Text style={styles.pageTitle}>{name}</Text>
@@ -170,7 +166,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 20,
   },
   pageTitleContainer: {
     flexDirection: 'row',

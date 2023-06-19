@@ -44,7 +44,10 @@ export default function SecondhandGoods({
             <TouchableOpacity
               key={index}
               onPress={() =>
-                navigation.navigate('GoodsDetail', {productId: data.productId})
+                navigation.navigate('GoodsDetail', {
+                  userId: userId,
+                  productId: data.productId,
+                })
               }>
               <SecondhandGoodsCard data={data} />
             </TouchableOpacity>
