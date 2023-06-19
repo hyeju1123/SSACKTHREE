@@ -101,10 +101,8 @@ export default function PostGoodsPage(): JSX.Element {
   };
 
   const uploadProduct = async () => {
-    // let products = {
-    //   base64: [],
-    //   filename: [],
-    // };
+    setLoading(true);
+
     const dto = {
       userId,
       title,
@@ -112,23 +110,16 @@ export default function PostGoodsPage(): JSX.Element {
       content,
       hopingPlaceAddress: place,
     };
-    const products = [images[0].base64];
+    const file = {
+      name: images[0].fileName,
+      type: images[0].type,
+      uri: images[0].uri,
+    };
 
-    // for (let i = 0; i < images.length; i++) {
-    //   products.base64.push(images[i].base64);
-    //   products.filename.push(images[i].fileName);
-    // }
-
-    // const body = new FormData();
-
-    // body.append('dto', JSON.stringify(dto));
-    // body.append('products', {
-    //   uri: images[0].base64,
-    //   type: images[0].type,
-    //   name: images[0].fileName,
-    // });
-
-    const res = await uploadSecondhandProducts(dto, products);
+    const res = await uploadSecondhandProducts({dto, file});
+    if (res === 1) {
+      setLoading(false);
+    }
     console.log('res:: ', res);
   };
 

@@ -32,20 +32,14 @@ export default function SecondhandGoods({
   };
 
   useEffect(() => {
-    const unsubscribeFocus = navigation.addListener('focus', () => {
-      console.log('focused');
-      setLoading(true);
-      const showMine = PRODUCT.includes('IS_MINE') ? 'T' : 'F';
-      getSecondhandProducts(parseInt(userId, 10), SORT, showMine).then(data => {
-        data && setGoodsData(data);
-        setLoading(false);
-      });
+    setLoading(true);
+    const showMine = PRODUCT.includes('IS_MINE') ? 'T' : 'F';
+    getSecondhandProducts(parseInt(userId, 10), SORT, showMine).then(data => {
+      console.log(data);
+      data && setGoodsData(data.reverse());
+      setLoading(false);
     });
-
-    return () => {
-      unsubscribeFocus();
-    };
-  }, [userId, SORT, PRODUCT]);
+  }, [userId, SORT, PRODUCT, navigation]);
 
   return (
     <View style={styles.latestProductsContainer}>

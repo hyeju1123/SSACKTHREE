@@ -2,6 +2,21 @@ import {SecondProduct, SecondProductDetail} from '../model/secondhand';
 import customAxios from './customAxios';
 import useSWR from 'swr';
 
+type UploadProps = {
+  dto: {
+    userId: string;
+    title: string;
+    price: string;
+    content: string;
+    hopingPlaceAddress: string;
+  };
+  file: {
+    name: string;
+    type: string;
+    uri: string;
+  };
+};
+
 export const getSecondhandProducts = async (
   userId: number,
   sortType: string,
@@ -16,7 +31,8 @@ export const getSecondhandProducts = async (
   return data;
 };
 
-export const uploadSecondhandProducts = async (dtoData, products) => {
+export const uploadSecondhandProducts = async ({dto, file}: UploadProps) => {
+  const {userId, title, price, content, hopingPlaceAddress} = dto;
   const url = '/api/town/register';
   const fetcher = await customAxios();
   if (!fetcher) {
@@ -25,16 +41,15 @@ export const uploadSecondhandProducts = async (dtoData, products) => {
 
   const body = new FormData();
 
-  const json = JSON.stringify(dtoData);
-  const dto = new Blob([json], {type: 'application/json', lastModified: 1});
+  body.append('userId', userId);
+  body.append('title', title);
+  body.append('price', price);
+  body.append('content', content);
+  body.append('hopingPlaceAddress', hopingPlaceAddress);
+  body.append('productImages[0]', file);
 
-  body.append('dto', dto);
-  body.append('products', products);
-
-  // console.log(body);
   const {data} = await fetcher.post(url, body, {
     headers: {
-      Accept: 'application/json',
       'Content-Type': 'multipart/form-data',
     },
   });
