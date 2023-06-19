@@ -3,6 +3,15 @@ export const convertTime = (saleEndTime: string) => {
   return `${date.getHours()}:${date.getMinutes()}`;
 };
 
+export const formatDateString = (dateString: string) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}.${month}.${day}`;
+};
+
 export const calcDiscountRate = (original: number, discounted: number) => {
   return Math.ceil(((original - discounted) / original) * 100);
 };

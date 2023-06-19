@@ -9,24 +9,59 @@ import {
 } from 'react-native';
 import {Text} from '../components/text';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import useSecondhandDetail from '../api/useSecondhand';
+import {formatDateString, formatPrice} from '../service/calculator';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {NeighborStackParamList} from '../navigation/NeighborStack';
 
-export default function GoodsDetailPage() {
+export type OrderPageProps = NativeStackScreenProps<
+  NeighborStackParamList,
+  'GoodsDetail'
+>;
+
+export default function GoodsDetailPage({route}: OrderPageProps) {
+  const {productId} = route.params;
+  const {secondhandDetailData} = useSecondhandDetail(productId.toString());
+  console.log(secondhandDetailData);
+  if (!secondhandDetailData) {
+    return <Text>loading...</Text>;
+  }
+
+  const {
+    content,
+    createdDate,
+    hopingPlaceAddress,
+    imagePath,
+    price,
+    status,
+    title,
+    townOtherProductResponseDtoList,
+  } = secondhandDetailData;
+
   return (
     <View style={styles.container}>
       <ScrollView style={{marginBottom: 180}}>
         <StatusBar translucent backgroundColor="transparent" />
         <Image
-          source={require('../../images/spam.jpeg')}
+          source={
+            imagePath !== ''
+              ? {uri: imagePath}
+              : require('../../images/spam.jpeg')
+          }
           style={styles.backgroundImage}
         />
         <View style={styles.mainPostContainer}>
           <View style={styles.rowWrapper}>
-            <Text style={styles.titleText}>스팸 팔아요</Text>
-            <Text style={styles.onSaleText}>판매중</Text>
+            <Text style={styles.titleText}>{title}</Text>
+            <Text style={styles.onSaleText}>
+              {status === 'SALE_ING' ? '판매중' : '판매완료'}{' '}
+            </Text>
           </View>
-          <Text style={styles.priceText}>5,000원</Text>
+          <Text style={styles.priceText}>
+            {formatPrice(price.toString())}원
+          </Text>
           <Text style={styles.timeLocText}>
-            서울시 용산구 청파동 | 2023.04.01
+            {hopingPlaceAddress} | {formatDateString(createdDate)}
           </Text>
           <View style={[styles.rowWrapper, {alignSelf: 'flex-end'}]}>
             <IonIcon name="eye" size={20} color="#adadad" />
@@ -36,15 +71,12 @@ export default function GoodsDetailPage() {
             <IonIcon name="chatbox" size={20} color="#adadad" />
             <Text style={styles.numText}>2</Text>
           </View>
-          <Text style={styles.mainPostText}>
-            10개 정도 남아 있고요 한통에 오백원정도로 팝니다~ 채팅 답변 늦을
-            수도 있어요
-          </Text>
+          <Text style={styles.mainPostText}>{content}</Text>
         </View>
         <View style={styles.mainPostContainer}>
           <View style={styles.rowWrapper}>
             <Text style={styles.desiredLocText}>거래희망장소</Text>
-            <Text style={styles.locText}>숙명여자대학교</Text>
+            <Text style={styles.locText}>{hopingPlaceAddress}</Text>
           </View>
           <Image
             source={require('../../images/loc.png')}

@@ -2,21 +2,32 @@ import React from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {Text} from './text';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {SecondProduct} from '../model/secondhand';
+import {formatDateString, formatPrice} from '../service/calculator';
 
-export default function SecondhandGoodsCard() {
+type Props = {
+  data: SecondProduct;
+};
+
+export default function SecondhandGoodsCard({data}: Props) {
+  const {price, title, hopingPlaceAddress, createdDate, imagePath} = data;
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../images/spam.jpeg')}
+        source={
+          imagePath !== ''
+            ? {uri: imagePath}
+            : require('../../images/spam.jpeg')
+        }
         style={styles.foodImage}
       />
       <View style={styles.infoContainer}>
-        <Text style={styles.priceText}>5,000원</Text>
-        <Text style={styles.titleText}>스팸 팔아요</Text>
+        <Text style={styles.priceText}>{formatPrice(price.toString())}원</Text>
+        <Text style={styles.titleText}>{title}</Text>
         <View style={styles.rowWrapper}>
-          <Text style={styles.dateText}>2023.04.01</Text>
+          <Text style={styles.dateText}>{formatDateString(createdDate)}</Text>
           <Text oneline={true} style={styles.locationText}>
-            서울시 용산구 청파동 3가
+            {hopingPlaceAddress}
           </Text>
         </View>
       </View>

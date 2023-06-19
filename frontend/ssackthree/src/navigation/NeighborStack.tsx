@@ -8,7 +8,7 @@ import PostGoodsPage from '../neighbor/PostGoodsPage';
 
 export type NeighborStackParamList = {
   Neighbor: undefined;
-  GoodsDetail: undefined;
+  GoodsDetail: {productId: number};
   RegistGoods: undefined;
   PostGoods: undefined;
   MyPageStack: undefined;
