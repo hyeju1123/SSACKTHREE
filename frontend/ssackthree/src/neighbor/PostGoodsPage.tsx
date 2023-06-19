@@ -15,8 +15,17 @@ import {Asset, launchImageLibrary} from 'react-native-image-picker';
 import {useRecoilValue} from 'recoil';
 import {meData} from '../service/atom';
 import {uploadSecondhandProducts} from '../api/useSecondhand';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {NeighborStackParamList} from '../navigation/NeighborStack';
 
-export default function PostGoodsPage(): JSX.Element {
+export type PostGoodsPageProps = NativeStackScreenProps<
+  NeighborStackParamList,
+  'PostGoods'
+>;
+
+export default function PostGoodsPage({
+  navigation,
+}: PostGoodsPageProps): JSX.Element {
   const {userId} = useRecoilValue(meData);
   const [images, setImages] = useState<Asset[]>([]);
   const [title, setTitle] = useState('');
@@ -119,6 +128,7 @@ export default function PostGoodsPage(): JSX.Element {
     const res = await uploadSecondhandProducts({dto, file});
     if (res === 1) {
       setLoading(false);
+      navigation.goBack();
     }
     console.log('res:: ', res);
   };
