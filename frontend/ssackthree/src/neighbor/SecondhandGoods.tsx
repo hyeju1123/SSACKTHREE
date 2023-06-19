@@ -24,9 +24,15 @@ export default function SecondhandGoods({
   const [goodsData, setGoodsData] = useState<SecondProduct[]>([]);
 
   useEffect(() => {
-    getSecondhandProducts(parseInt(userId, 10), SORT, 'F').then(
-      data => data && setGoodsData(data),
-    );
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      console.log('focused');
+      getSecondhandProducts(parseInt(userId, 10), SORT, 'F').then(
+        data => data && setGoodsData(data),
+      );
+    });
+    return () => {
+      unsubscribeFocus();
+    };
   }, [userId, SORT]);
 
   return (
