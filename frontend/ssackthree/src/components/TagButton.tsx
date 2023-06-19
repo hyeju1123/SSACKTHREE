@@ -12,6 +12,7 @@ type OptionMapProps = {
   B: string;
   WRONG_ORDER: string;
   EXPIRATION: string;
+  IS_MINE: string;
 };
 
 const optionMap: OptionMapProps = {
@@ -31,6 +32,7 @@ export default function TagButton({name}: OptionName): JSX.Element {
       const newData = PRODUCT.filter(tag => tag !== name);
       handleOptions('PRODUCT', newData);
     } else {
+      console.log('value in button', name);
       setSelected(true);
       handleOptions('PRODUCT', [...PRODUCT, name]);
     }

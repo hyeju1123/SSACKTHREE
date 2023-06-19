@@ -61,6 +61,7 @@ export default function ChatPage({navigation}: ChatPageProps) {
                       <Text style={styles.name}>{counterpartName}</Text>
                       <Text style={styles.role}>{counterpartRole}</Text>
                     </View>
+                    <Text>{counterpartName}님으로부터 채팅이 왔어요</Text>
                   </View>
                 </TouchableOpacity>
               ),

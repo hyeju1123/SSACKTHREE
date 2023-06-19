@@ -4,11 +4,18 @@ import {Text} from '../components/text';
 import LatestProductsCard from '../components/LatestProductCard';
 import {HomeAndNeighborProps} from '../navigation/types';
 import useMenu from '../api/useMenu';
+import ProductSkeletonCard from '../skeleton/ProductSkeletonCard';
 
 export default function LatestProducts({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
   const {menuData, isValidating, mutate} = useMenu();
+
+  const showSkeleton = () => {
+    return Array.from({length: 6}, () => 0).map((_, index) => (
+      <ProductSkeletonCard key={index} />
+    ));
+  };
 
   useEffect(() => {
     const unsubscribeFocus = navigation.addListener('focus', () => {
@@ -24,7 +31,7 @@ export default function LatestProducts({
     <View style={styles.latestProductsContainer}>
       <Text style={styles.h1Text}>방금 올라온 상품이에요 👀</Text>
       <ScrollView style={styles.scrollViewStyle}>
-        {isValidating && <Text>is Loading...</Text>}
+        {isValidating && showSkeleton()}
         {menuData?.map((menu, index) => (
           <TouchableOpacity
             key={index}

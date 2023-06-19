@@ -15,25 +15,37 @@ import {useRecoilValue} from 'recoil';
 import {meData} from '../service/atom';
 import {getSecondhandProducts} from '../api/useSecondhand';
 import {SecondProduct} from '../model/secondhand';
+import ProductSkeletonCard from '../skeleton/ProductSkeletonCard';
 
 export default function SecondhandGoods({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
-  const {SORT} = useOption();
+  const {SORT, PRODUCT} = useOption();
   const {userId} = useRecoilValue(meData);
   const [goodsData, setGoodsData] = useState<SecondProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const showSkeleton = () => {
+    return Array.from({length: 6}, () => 0).map((_, index) => (
+      <ProductSkeletonCard key={index} />
+    ));
+  };
 
   useEffect(() => {
     const unsubscribeFocus = navigation.addListener('focus', () => {
       console.log('focused');
-      getSecondhandProducts(parseInt(userId, 10), SORT, 'F').then(
-        data => data && setGoodsData(data),
-      );
+      setLoading(true);
+      const showMine = PRODUCT.includes('IS_MINE') ? 'T' : 'F';
+      getSecondhandProducts(parseInt(userId, 10), SORT, showMine).then(data => {
+        data && setGoodsData(data);
+        setLoading(false);
+      });
     });
+
     return () => {
       unsubscribeFocus();
     };
-  }, [userId, SORT]);
+  }, [userId, SORT, PRODUCT]);
 
   return (
     <View style={styles.latestProductsContainer}>
@@ -45,6 +57,7 @@ export default function SecondhandGoods({
         <Text style={styles.postButtonText}>등록하기</Text>
       </TouchableOpacity>
       <ScrollView style={styles.scrollViewStyle}>
+        {loading && showSkeleton()}
         {goodsData &&
           goodsData.map((data, index) => (
             <TouchableOpacity
@@ -67,7 +80,6 @@ const height = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   latestProductsContainer: {
-    minHeight: height - 200,
     marginBottom: 330,
     padding: 15,
   },

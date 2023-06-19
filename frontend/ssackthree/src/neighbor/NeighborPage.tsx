@@ -4,6 +4,7 @@ import Header from '../main/Header';
 import OptionTags from '../main/OptionTags';
 import {HomeAndNeighborProps} from '../navigation/types';
 import SecondhandGoods from './SecondhandGoods';
+import {OptionProvider} from '../context/OptionContext';
 
 export default function NeighborPage({
   navigation,
@@ -12,8 +13,10 @@ export default function NeighborPage({
   return (
     <View style={{backgroundColor: 'white', minHeight: '100%'}}>
       <Header navigation={navigation} route={route} />
-      <OptionTags page="NEIGHBOR" />
-      <SecondhandGoods navigation={navigation} route={route} />
+      <OptionProvider>
+        <OptionTags page="NEIGHBOR" />
+        <SecondhandGoods navigation={navigation} route={route} />
+      </OptionProvider>
     </View>
   );
 }

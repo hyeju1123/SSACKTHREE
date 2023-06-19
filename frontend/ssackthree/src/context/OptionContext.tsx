@@ -24,6 +24,7 @@ export const OptionProvider: React.FC = ({children}) => {
   const [options, setOptions] = useState<OptionContextValue>(optionTypes);
 
   const handleOptions = useCallback((option: string, value: string) => {
+    console.log(value);
     setOptions(prevOptions => ({
       ...prevOptions,
       [option]: value,
