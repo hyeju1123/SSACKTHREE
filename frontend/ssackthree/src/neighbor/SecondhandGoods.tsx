@@ -19,15 +19,17 @@ import {SecondProduct} from '../model/secondhand';
 export default function SecondhandGoods({
   navigation,
 }: HomeAndNeighborProps): JSX.Element {
-  const {SORT} = useOption();
+  const {SORT, PRODUCT} = useOption();
   const {userId} = useRecoilValue(meData);
   const [goodsData, setGoodsData] = useState<SecondProduct[]>([]);
 
   useEffect(() => {
-    getSecondhandProducts(parseInt(userId, 10), SORT, 'F').then(
+    console.log('PRODUCT', PRODUCT);
+    const showMine = PRODUCT.includes('IS_MINE') ? 'T' : 'F';
+    getSecondhandProducts(parseInt(userId, 10), SORT, showMine).then(
       data => data && setGoodsData(data),
     );
-  }, [userId, SORT]);
+  }, [userId, SORT, PRODUCT]);
 
   return (
     <View style={styles.latestProductsContainer}>
