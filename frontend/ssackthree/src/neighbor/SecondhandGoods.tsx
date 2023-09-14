@@ -74,6 +74,7 @@ const height = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   latestProductsContainer: {
+    minHeight: height - 250,
     marginBottom: 330,
     padding: 15,
   },

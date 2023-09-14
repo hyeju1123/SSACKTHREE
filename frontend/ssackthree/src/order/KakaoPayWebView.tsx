@@ -16,7 +16,7 @@ export default function KakaoPayWebView({route}: KakaoPayWebViewProps) {
       style={{flex: 1}}
       allowFileAccess={true}
       scalesPageToFit={true}
-      originWhitelist={['*']}
+      originWhitelist={['https://', '*']}
     />
   );
 }

@@ -11,7 +11,6 @@ import {HomeStackParamList} from '../navigation/HomeStack';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {calcDiscountRate, formatPrice} from '../service/calculator';
 import {doPay} from '../api/usePay';
-import WebView from 'react-native-webview';
 
 export type PayPageProps = NativeStackScreenProps<HomeStackParamList, 'Pay'>;
 
@@ -20,7 +19,6 @@ export default function PayPage({
   navigation,
 }: PayPageProps): JSX.Element {
   const [togo, setTogo] = useState(true);
-  const [payUrl, setPayUrl] = useState('');
   const {post, userId, postId} = route.params;
   const {
     menuDetail: {name, originalPrice, discountedPrice},
@@ -36,7 +34,6 @@ export default function PayPage({
       discountedPrice,
     );
 
-    console.log(res);
     if (!res) {
       navigation.navigate('KakaoPay', {uri: 'https://www.pixar.com/404'});
       return;
@@ -104,7 +101,6 @@ export default function PayPage({
           <Text style={styles.buttonText}>결제하기</Text>
         </TouchableOpacity>
       </View>
-      {/* {payUrl !== '' && <WebView source={{uri: payUrl}} style={{flex: 1}} />} */}
     </>
   );
 }
