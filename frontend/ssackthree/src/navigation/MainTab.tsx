@@ -16,7 +16,6 @@ import HomeStack from './HomeStack';
 import NeighborStack from './NeighborStack';
 import ReceiptPage from '../receipt/ReceiptPage';
 import ChatStack from './ChatStack';
-import ChatScreen from '../chat/ChatScreen';
 
 const Tab = createBottomTabNavigator();
 

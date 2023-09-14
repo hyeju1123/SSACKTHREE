@@ -56,12 +56,14 @@ export const uploadSecondhandProducts = async ({dto, file}: UploadProps) => {
   return data;
 };
 
-export default function useSecondhandDetail(id: string) {
+export default function useSecondhandDetail(productId: string, userId: string) {
   const {
     data: secondhandDetailData,
     error,
     isLoading,
-  } = useSWR<SecondProductDetail>(`/api/town/list/detail/${id}`);
+  } = useSWR<SecondProductDetail>(
+    `/api/town/list/detail/${productId}/${userId}`,
+  );
 
   return {secondhandDetailData, error, isLoading};
 }

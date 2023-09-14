@@ -22,7 +22,10 @@ export type OrderPageProps = NativeStackScreenProps<
 
 export default function GoodsDetailPage({route, navigation}: OrderPageProps) {
   const {productId, userId} = route.params;
-  const {secondhandDetailData} = useSecondhandDetail(productId.toString());
+  const {secondhandDetailData} = useSecondhandDetail(
+    productId.toString(),
+    userId,
+  );
   console.log(secondhandDetailData);
   if (!secondhandDetailData) {
     return <Text>loading...</Text>;
