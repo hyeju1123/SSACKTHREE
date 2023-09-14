@@ -33,6 +33,7 @@ export default function ChatPage({navigation}: ChatPageProps) {
             .map(
               ({
                 chatRoomId,
+                counterpartUserId,
                 counterpartName,
                 counterpartProfile,
                 counterpartRole,
@@ -43,6 +44,7 @@ export default function ChatPage({navigation}: ChatPageProps) {
                       name: counterpartName,
                       role: counterpartRole,
                       userId: userId,
+                      counterpartId: counterpartUserId,
                       roomId: chatRoomId,
                     })
                   }

@@ -25,7 +25,7 @@ export type ChatMessageProps = {
 };
 
 export default function ChatScreen({route}: ChatScreenProps) {
-  const {name, role, userId, roomId} = route.params;
+  const {name, role, userId, roomId, counterpartId} = route.params;
   const ws = useRef<WebSocket | null>(null);
 
   const [inputText, setInputText] = useState('');
@@ -34,8 +34,8 @@ export default function ChatScreen({route}: ChatScreenProps) {
   const handleSendMessage = () => {
     const sendingData = {
       senderId: userId,
-      roomId: 9,
-      receiverId: 5,
+      roomId: roomId,
+      receiverId: counterpartId,
       content: inputText,
     };
     const updateData = {

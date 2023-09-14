@@ -8,12 +8,14 @@ import MyPageStack from './MyPageStack';
 import {DetailPost} from '../model/post';
 import PostCodeStack from './PostCodeStack';
 import PayPage from '../order/PayPage';
+import KakaoPayWebView from '../order/KakaoPayWebView';
 
 export type HomeStackParamList = {
   Home: undefined;
   Product: {postId: number};
   Order: {post: DetailPost; postId: number};
   Pay: {post: DetailPost; postId: number; userId: string};
+  KakaoPay: {uri: string};
   MyPageStack: undefined;
   PostCodeStack: undefined;
 };
@@ -52,6 +54,14 @@ export default function HomeStack(): JSX.Element {
         }}
         name="Pay"
         component={PayPage}
+      />
+      <Stack.Screen
+        options={{
+          headerTitle: '',
+          headerTransparent: true,
+        }}
+        name="KakaoPay"
+        component={KakaoPayWebView}
       />
       <Stack.Screen
         options={{headerShown: false}}

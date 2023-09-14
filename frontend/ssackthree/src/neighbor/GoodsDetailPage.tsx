@@ -45,11 +45,15 @@ export default function GoodsDetailPage({route, navigation}: OrderPageProps) {
     if (!res) {
       return;
     }
+
+    const counterpartId =
+      res.userId1 === parseInt(userId, 10) ? res.userId2 : res.userId1;
     navigation.navigate('ChatScreen', {
       name: '',
       role: '사용자',
       roomId: res.roomId,
       userId: userId,
+      counterpartId,
     });
   };
 

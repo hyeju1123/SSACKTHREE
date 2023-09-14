@@ -13,7 +13,13 @@ export type NeighborStackParamList = {
   RegistGoods: undefined;
   PostGoods: undefined;
   MyPageStack: undefined;
-  ChatScreen: {name: string; role: string; userId: string; roomId: number};
+  ChatScreen: {
+    name: string;
+    role: string;
+    userId: string;
+    roomId: number;
+    counterpartId: number;
+  };
 };
 
 const Stack = createNativeStackNavigator<NeighborStackParamList>();

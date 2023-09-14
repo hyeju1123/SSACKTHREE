@@ -35,7 +35,7 @@ export default function SecondhandGoods({
     setLoading(true);
     const showMine = PRODUCT.includes('IS_MINE') ? 'T' : 'F';
     getSecondhandProducts(parseInt(userId, 10), SORT, showMine).then(data => {
-      console.log(data);
+      console.log('data::', data);
       data && setGoodsData(data.reverse());
       setLoading(false);
     });

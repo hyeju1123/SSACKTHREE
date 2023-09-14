@@ -1,10 +1,22 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {WebView} from 'react-native-webview';
+import {HomeStackParamList} from '../navigation/HomeStack';
 
-type Props = {
-  uri: string;
-};
+export type KakaoPayWebViewProps = NativeStackScreenProps<
+  HomeStackParamList,
+  'KakaoPay'
+>;
 
-export default function KakaoPayWebView({uri}: Props) {
-  return <WebView source={{uri}} style={{flex: 1}} />;
+export default function KakaoPayWebView({route}: KakaoPayWebViewProps) {
+  const {uri} = route.params;
+  return (
+    <WebView
+      source={{uri}}
+      style={{flex: 1}}
+      allowFileAccess={true}
+      scalesPageToFit={true}
+      originWhitelist={['*']}
+    />
+  );
 }

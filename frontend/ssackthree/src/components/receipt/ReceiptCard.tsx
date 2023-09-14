@@ -22,16 +22,17 @@ export default function ReceiptCard({data}: Props): JSX.Element {
   const {menuName, originalPrice, discountedPrice, status, storeName} = data;
 
   const setCardStateColor = () => {
+    console.log(status);
     if (status === 'COMPLETED' || status === 'BARGAIN_COMPLETED') {
       return '#398908';
     }
-    if (status === 'BARGAIN_ACTIVE' || 'READY') {
+    if (status === 'BARGAIN_ACTIVE' || status === 'READY') {
       return '#94E048';
     }
     if (status === 'BARGAIN_SUCCESS') {
       return '#27E288';
     }
-    if (status === 'BARGAIN_FAIL' || 'CANCEL') {
+    if (status === 'BARGAIN_FAIL' || status === 'CANCEL') {
       return '#000000';
     }
   };

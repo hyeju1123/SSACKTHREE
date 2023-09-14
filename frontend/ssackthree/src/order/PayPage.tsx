@@ -15,7 +15,10 @@ import WebView from 'react-native-webview';
 
 export type PayPageProps = NativeStackScreenProps<HomeStackParamList, 'Pay'>;
 
-export default function PayPage({route}: PayPageProps): JSX.Element {
+export default function PayPage({
+  route,
+  navigation,
+}: PayPageProps): JSX.Element {
   const [togo, setTogo] = useState(true);
   const [payUrl, setPayUrl] = useState('');
   const {post, userId, postId} = route.params;
@@ -32,7 +35,14 @@ export default function PayPage({route}: PayPageProps): JSX.Element {
       name,
       discountedPrice,
     );
+
     console.log(res);
+    if (!res) {
+      navigation.navigate('KakaoPay', {uri: 'https://www.pixar.com/404'});
+      return;
+    }
+
+    navigation.navigate('KakaoPay', {uri: res?.next_redirect_pc_url});
   };
 
   return (
@@ -94,7 +104,7 @@ export default function PayPage({route}: PayPageProps): JSX.Element {
           <Text style={styles.buttonText}>결제하기</Text>
         </TouchableOpacity>
       </View>
-      {payUrl !== '' && <WebView source={{uri: payUrl}} style={{flex: 1}} />}
+      {/* {payUrl !== '' && <WebView source={{uri: payUrl}} style={{flex: 1}} />} */}
     </>
   );
 }

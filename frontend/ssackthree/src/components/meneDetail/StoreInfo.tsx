@@ -61,10 +61,10 @@ export default function StoreInfo({menuStore}: Props): JSX.Element {
         <Text style={styles.businessInfoText}>가게공지</Text>
         <View style={styles.notificationTextBox}>
           <Text style={styles.businessInfoDes}>
-            안녕하세요~ 파리바게뜨입니다! ......
+            안녕하세요~ 눈송와플입니다!
           </Text>
           <Text style={styles.businessInfoDes}>앞으로 잘부탁드려요~~~</Text>
-          <Text style={styles.businessInfoDes}>쓸 게 없네.......</Text>
+          {/* <Text style={styles.businessInfoDes}>쓸 게 없네.......</Text> */}
         </View>
       </View>
     </View>

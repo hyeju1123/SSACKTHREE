@@ -9,6 +9,12 @@ type Props = {
   maxBargainPrice: number;
 };
 
+type KakaoProps = {
+  tid: string;
+  next_redirect_mobile_url: string;
+  next_redirect_pc_url: string;
+};
+
 export const offerBargain = async (
   userId: number,
   menuId: number,
@@ -28,7 +34,7 @@ export const doPay = async (
   menuId: number,
   name: string,
   price: number,
-) => {
+): Promise<KakaoProps | undefined> => {
   const url = '/api/payment/kakaopay/ready';
   const fetcher = await customAxios();
   if (!fetcher) {
