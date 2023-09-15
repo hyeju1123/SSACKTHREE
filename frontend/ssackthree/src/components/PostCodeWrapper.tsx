@@ -16,7 +16,10 @@ type ResultProps = {
 
 export default function PostCodeWrapper({
   navigation,
+  route,
 }: PostCodePageProps): JSX.Element {
+  const {userId} = route.params;
+
   const handleAddressData = (data: ResultProps) => {
     let addressData = {detailAddress: data.address};
 
@@ -26,6 +29,7 @@ export default function PostCodeWrapper({
           ...addressData,
           address: data.apartment,
         },
+        userId,
       });
     } else {
       navigation.navigate('SetDetailAddress', {
@@ -33,6 +37,7 @@ export default function PostCodeWrapper({
           ...addressData,
           address: data.buildingName,
         },
+        userId,
       });
     }
   };

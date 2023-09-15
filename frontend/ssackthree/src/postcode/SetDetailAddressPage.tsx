@@ -6,10 +6,11 @@ import {
   StyleSheet,
   View,
   Text,
-  Touchable,
   TouchableOpacity,
 } from 'react-native';
 import DragHorizontal from '../components/DragHorizontal';
+import {registerLoc} from '../api/useLocation';
+import {convertToMeter} from '../service/calculator';
 
 export type SetDetailAddress = NativeStackScreenProps<
   PostCodeStackParamList,
@@ -22,9 +23,22 @@ export default function SetDetailAddressPage({
 }: SetDetailAddress): JSX.Element {
   const {
     addressData: {address, detailAddress},
+    userId,
   } = route.params;
 
   const [distance, setDistance] = useState(0);
+
+  const handleRegisterLoc = async () => {
+    const res = await registerLoc(
+      parseInt(userId, 10),
+      address,
+      convertToMeter(distance),
+    );
+    console.log('handleRegisterLoc res:: ', res);
+    if (res === 1) {
+      navigation.pop(2);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -35,7 +49,9 @@ export default function SetDetailAddressPage({
         </View>
         <DragHorizontal distance={distance} handleDistance={setDistance} />
       </ScrollView>
-      <TouchableOpacity style={styles.completeButton}>
+      <TouchableOpacity
+        onPress={handleRegisterLoc}
+        style={styles.completeButton}>
         <Text style={styles.completeText}>완료</Text>
       </TouchableOpacity>
     </View>

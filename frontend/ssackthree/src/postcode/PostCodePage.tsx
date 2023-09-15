@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   StatusBar,
   View,
@@ -28,8 +28,18 @@ export default function PostCodePage({
   navigation,
 }: PostCodePageProps): JSX.Element {
   const {userId} = useRecoilValue(meData);
-  const {locData} = useLocation(userId);
+  const {locData, mutate} = useLocation(userId);
   console.log(locData);
+
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      mutate();
+    });
+
+    return () => {
+      unsubscribeFocus();
+    };
+  }, []);
 
   return (
     <View>
@@ -38,7 +48,7 @@ export default function PostCodePage({
         <ScrollView style={{width: '100%'}}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('PostCodeWrapper');
+              navigation.navigate('PostCodeWrapper', {userId: userId});
             }}
             style={styles.textInput}>
             <Text>지번, 도로명, 건물명으로 검색</Text>

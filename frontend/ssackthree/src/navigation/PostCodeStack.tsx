@@ -7,8 +7,8 @@ import SetDetailAddressPage from '../postcode/SetDetailAddressPage';
 
 export type PostCodeStackParamList = {
   PostCode: undefined;
-  PostCodeWrapper: undefined;
-  SetDetailAddress: {addressData: AddressProps};
+  PostCodeWrapper: {userId: string};
+  SetDetailAddress: {addressData: AddressProps; userId: string};
 };
 
 const Stack = createNativeStackNavigator<PostCodeStackParamList>();

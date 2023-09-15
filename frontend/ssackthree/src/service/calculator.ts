@@ -39,3 +39,8 @@ export const convertToKilometers = (value: number) => {
   const kilometers = value / 1000;
   return Number(kilometers.toFixed(2));
 };
+
+export const convertToMeter = (value: number) => {
+  const meter = value * 1000;
+  return Math.round(meter);
+};
