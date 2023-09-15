@@ -30,6 +30,7 @@ export type MenuStore = {
 };
 
 export type DetailPost = {
+  writerId: number;
   menuDetail: MenuDetail;
   menuOther: MenuOther[];
   menuStore: MenuStore;

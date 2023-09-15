@@ -29,6 +29,7 @@ export default function OrderPage({
 }: OrderPageProps): JSX.Element {
   const {postId, post} = route.params;
   const {
+    writerId,
     menuDetail: {
       name,
       isBargainning,
@@ -51,6 +52,7 @@ export default function OrderPage({
 
   const handleBargain = async () => {
     const result = await offerBargain(
+      writerId,
       parseInt(userId, 10),
       postId,
       parseInt(offerPrice, 10),

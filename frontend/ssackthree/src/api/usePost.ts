@@ -43,6 +43,7 @@ export default function usePost(id: number, userId: number) {
       return;
     }
     const newData = {
+      writerId: postData.writerId,
       menuOther: postData.menuOther,
       menuStore: postData.menuStore,
       menuDetail: {

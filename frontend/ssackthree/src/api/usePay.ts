@@ -16,6 +16,7 @@ type KakaoProps = {
 };
 
 export const offerBargain = async (
+  storeId: number,
   userId: number,
   menuId: number,
   bargainPrice: number,
@@ -25,7 +26,12 @@ export const offerBargain = async (
   if (!fetcher) {
     return;
   }
-  const res = await fetcher.post(url, {userId, menuId, bargainPrice});
+  const res = await fetcher.post(url, {
+    proposerUserId: userId,
+    receiverUserId: storeId,
+    menuId,
+    bargainPrice,
+  });
   return res.data;
 };
 
