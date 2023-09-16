@@ -26,7 +26,8 @@ export default function useChat(id: string) {
     data: chatRoomData,
     error,
     isLoading,
+    mutate,
   } = useSWR<ChatRoom[]>(`/api/chat/room/list/${id}`);
 
-  return {chatRoomData, error, isLoading};
+  return {chatRoomData, error, isLoading, mutate};
 }

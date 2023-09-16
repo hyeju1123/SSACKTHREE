@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -22,7 +22,17 @@ export type ChatPageProps = NativeStackScreenProps<
 
 export default function ChatPage({navigation}: ChatPageProps) {
   const {userId} = useRecoilValue<AuthUser>(meData);
-  const {chatRoomData} = useChat(userId);
+  const {chatRoomData, mutate} = useChat(userId);
+
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      mutate();
+    });
+
+    return () => {
+      unsubscribeFocus();
+    };
+  }, [navigation, mutate]);
 
   return (
     <View style={styles.container}>
