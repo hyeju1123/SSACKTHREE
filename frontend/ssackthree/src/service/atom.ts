@@ -8,6 +8,7 @@ let meData = atom<AuthUser>({
     sub: '',
     role: '',
     exp: 0,
+    imageURL: '',
   },
 });
 
